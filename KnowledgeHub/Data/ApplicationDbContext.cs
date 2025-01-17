@@ -46,11 +46,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(e => e.Content)
                   .IsRequired();
 
-            entity.Property(e => e.Author)
-                  .IsRequired()
-                  .HasMaxLength(100);
-
-            entity.Property(e => e.Date)
+            entity.Property(e => e.CreatedAt)
                   .IsRequired();
 
             entity.Property(a => a.TotalReactions)
@@ -68,9 +64,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                           .HasForeignKey("ArticleId"));
 
             entity.HasMany(a => a.Reactions)
-                .WithOne(r => r.Article)
-                .HasForeignKey(r => r.ArticleId)
-                .OnDelete(DeleteBehavior.Cascade);
+                  .WithOne(r => r.Article)
+                  .HasForeignKey(r => r.ArticleId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
 
         modelBuilder.Entity<Reaction>(entity =>
@@ -126,7 +122,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Ignore(u => u.IsDeleted);
 
             entity.HasMany(u => u.Articles)
-                  .WithOne(a => a.User)
+                  .WithOne(a => a.Author)
                   .HasForeignKey(a => a.AuthorId)
                   .OnDelete(DeleteBehavior.Cascade);
         });

@@ -2,9 +2,8 @@
 
 public class Article
 {
-    public string Author { get; set; } = default!;
     public string Content { get; set; } = default!;
-    public DateTime Date { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     public string Id { get; set; } = default!;
     public string Title { get; set; } = default!;
 
@@ -17,7 +16,7 @@ public class Article
     #region Foreign Properties
 
     public string AuthorId { get; set; } = default!;
-    public User User { get; set; } = default!;
+    public User Author { get; set; } = default!;
 
     #endregion Foreign Properties
 

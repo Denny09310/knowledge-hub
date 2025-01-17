@@ -1,4 +1,5 @@
 using KnowledgeHub.Components;
+using KnowledgeHub.Components.Articles;
 using KnowledgeHub.Data;
 using KnowledgeHub.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -7,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorComponents();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite($"Data Source={Path.Combine(Path.GetTempPath(), "knowledge-hub.sqlite3")}"));
@@ -37,6 +39,8 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapRazorComponents<App>();
+app.MapArticlesEndpoints();
+app.MapRazorComponents<App>()
+   .AddInteractiveServerRenderMode();
 
 app.Run();

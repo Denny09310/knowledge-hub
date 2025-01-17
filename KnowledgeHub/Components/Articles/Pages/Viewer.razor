@@ -2,21 +2,42 @@
 @attribute [StreamRendering]
 
 @using Markdig
+@using System.Security.Claims
 
 @inject ArticleService ArticlesService
 
-@if (article == null)
+@if (Article == null)
 {
     @* TODO: Display a skeleton representing the format below, possibly create a separate component *@
 }
 else
 {
-    <h2 class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@article.Title</h2>
-    <p class="text-gray-700 text-sm font-medium">@article.Author</p>
-    <p class="text-gray-500 text-xs">@article.Date.ToShortDateString()</p>
+    <div class="gap-4 flex flex-col justify-between md:items-center md:flex-row">
+        <div>
+            <h2 class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@Article.Title</h2>
+            <p class="text-gray-700 text-sm font-medium">@(Article.Author.Username ?? Article.Author.Email)</p>
+            <p class="text-gray-500 text-xs">@Article.CreatedAt.ToShortDateString()</p>
+        </div>
 
-    <div class="prose mt-8 dark:prose-inverse md:prose-lg lg:prose-xl">
-        @((MarkupString)Markdown.ToHtml(article.Content, _pipeline))
+        @if (IsAuthor)
+        {
+            <div class="gap-2 flex items-center">
+                <a href="/Articles/Submit?ArticleId=@Article.Id"
+                   class="text-white bg-blue-700 px-5 py-2.5 me-2 mb-2 rounded-lg text-sm font-medium hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    Edit
+                </a>
+                <form method="post" action="/Articles/Delete/@Article.Id">
+                    <button type="submit"
+                            class="text-white bg-red-700 px-5 py-2.5 me-2 mb-2 rounded-lg text-sm font-medium hover:bg-red-800 focus:ring-4 focus:ring-red-300 focus:outline-none dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        }
+    </div>
+
+    <div class="prose mt-6 dark:prose-inverse md:mt-8 md:prose-lg lg:prose-xl">
+        @((MarkupString)Markdown.ToHtml(Article.Content, _pipeline))
     </div>
 }
 
@@ -30,7 +51,11 @@ else
     [Parameter]
     public string Id { get; set; } = default!;
 
-    private Article? article;
+    [CascadingParameter]
+    private Task<AuthenticationState> GetAuthenticationState { get; set; } = default!;
+
+    private Article? Article { get; set; }
+    private bool IsAuthor { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,6 +64,19 @@ else
             throw new ArgumentException("To show an article, must be provided a valid id.", nameof(Id));
         }
 
-        article = await ArticlesService.GetArticleAsync(Id);
+        Article = await ArticlesService.GetArticleAsync(Id);
+        IsAuthor = await IsUserAuthor();
+    }
+
+    private async Task<bool> IsUserAuthor()
+    {
+        var currentUserId = await GetCurrentUserId();
+        return currentUserId == Article?.AuthorId;
+    }
+
+    private async Task<string?> GetCurrentUserId()
+    {
+        var authState = await GetAuthenticationState;
+        return authState?.User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }
