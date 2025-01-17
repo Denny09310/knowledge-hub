@@ -2,9 +2,22 @@
 
 public class Article
 {
+    public string Author { get; set; } = default!;
+    public string Content { get; set; } = default!;
+    public DateTime Date { get; set; }
     public string Id { get; set; } = default!;
     public string Title { get; set; } = default!;
-    public string Content { get; set; } = default!;
-    public string Author { get; set; } = default!;
-    public DateTime Date { get; set; }
+
+    #region Computed Properties
+
+    public int TotalReactions { get; set; } = 0;
+
+    #endregion Computed Properties
+
+    #region Navigation Properties
+
+    public ICollection<Category> Categories { get; set; } = [];
+    public ICollection<Reaction> Reactions { get; set; } = [];
+
+    #endregion Navigation Properties
 }

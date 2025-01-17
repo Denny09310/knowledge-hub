@@ -29,7 +29,7 @@ else
     [Parameter]
     public string Id { get; set; } = default!;
 
-    private Models.Article? article;
+    private Article? article;
 
     protected override async Task OnInitializedAsync()
     {
@@ -38,7 +38,7 @@ else
             throw new ArgumentException("To show an article, must be provided a valid id.", nameof(Id));
         }
 
-        article = (await JsonHelper.ReadJsonAsync<Models.Article>("sample-data/recents-articles.json"))
+        article = (await JsonHelper.ReadJsonAsync<Article>("sample-data/recents-articles.json"))
             .First(x => x.Id == Id);
     }
 }
