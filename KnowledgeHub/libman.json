@@ -1,0 +1,13 @@
+{
+  "version": "3.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "library": "flowbite@3.0.0-beta.1",
+      "destination": "wwwroot/lib/flowbite/",
+      "files": [
+        "dist/flowbite.min.js"
+      ]
+    }
+  ]
+}
