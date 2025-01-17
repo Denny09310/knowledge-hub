@@ -1,9 +1,12 @@
 using KnowledgeHub.Components;
+using KnowledgeHub.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents();
+
+builder.Services.AddScoped<JsonHelper>();
 
 var app = builder.Build();
 
