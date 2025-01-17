@@ -1,0 +1,115 @@
+﻿@namespace KnowledgeHub.Components
+
+@inject JsonHelper JsonHelper
+
+@if (articles == null)
+{
+    @* TODO: Display a skeleton representing the format beloa, possibly create a separate component *@
+}
+else if (errorOccurred)
+{
+    <div class="text-red-500 p-4 border-red-400 bg-red-50 rounded-lg border">
+        <p>There was an error loading the articles. Please try again later.</p>
+        <button class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="window.location.reload()">Retry</button>
+    </div>
+}
+else
+{
+    <section class="bg-white mb-8 dark:bg-gray-900">
+
+        <div class="mb-6 flex items-center justify-between">
+            <h1 class="text-2xl font-semibold">Featured Article</h1>
+        </div>
+        @if (FrontpageArticle != null)
+        {
+            <div class="bg-gray-50 border-gray-200 p-8 mb-8 rounded-lg border dark:bg-gray-800 dark:border-gray-700 md:p-12">
+                <a href="#" class="bg-blue-100 text-blue-800 px-2.5 py-0.5 mb-2 inline-flex items-center rounded-md text-xs font-medium dark:bg-gray-700 dark:text-blue-400">
+                    <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 14">
+                        <path d="M11 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm8.585 1.189a.994.994 0 0 0-.9-.138l-2.965.983a1 1 0 0 0-.685.949v8a1 1 0 0 0 .675.946l2.965 1.02a1.013 1.013 0 0 0 1.032-.242A1 1 0 0 0 20 12V2a1 1 0 0 0-.415-.811Z" />
+                    </svg>
+                    Tutorial
+                </a>
+                <h1 class="text-gray-900 mb-2 text-3xl font-extrabold dark:text-white md:text-5xl">@FrontpageArticle.Title</h1>
+                <p class="text-gray-500 mb-6 lines-clamp-4 text-lg font-normal dark:text-gray-400 md:lines-clamp-6">@FrontpageArticle.Summary</p>
+
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                    <div>
+                        <p class="text-gray-700 text-sm font-medium">@FrontpageArticle.Author</p>
+                        <p class="text-gray-500 text-xs">@FrontpageArticle.Date.ToShortDateString()</p>
+                    </div>
+                    <a href="articles/@FrontpageArticle.Id" class="mt-4 px-4 py-2 text-white bg-blue-600 inline-flex items-center rounded-lg text-sm font-medium hover:bg-blue-700 md:mt-0">
+                        Read more
+                        <ArrowLeft Class="w-4 h-4 ml-2" />
+                    </a>
+                </div>
+            </div>
+        }
+
+        <div class="mb-6 flex items-center justify-between">
+            <h2 class="text-2xl font-semibold">Recent Articles</h2>
+            <a href="#" class="text-blue-600 font-medium hover:underline dark:text-blue-500">
+                <span class="hidden md:block">Share your knowledge</span>
+                <div class="block md:hidden">
+                    <PaperPlane Class="w-6 h-6 rotate-90" />
+                    <span class="sr-only">Join the community</span>
+                </div>
+            </a>
+        </div>
+        <div class="gap-8 grid md:grid-cols-2">
+            @foreach (var article in OtherArticles)
+            {
+                <div class="bg-gray-50 border-gray-200 p-8 rounded-lg border dark:bg-gray-800 dark:border-gray-700 md:p-12">
+                    <a href="#" class="bg-green-100 text-green-800 px-2.5 py-0.5 mb-2 inline-flex items-center rounded-md text-xs font-medium dark:bg-gray-700 dark:text-green-400">
+                        <svg class="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                            <path d="M17 11h-2.722L8 17.278a5.512 5.512 0 0 1-.9.722H17a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1ZM6 0H1a1 1 0 0 0-1 1v13.5a3.5 3.5 0 1 0 7 0V1a1 1 0 0 0-1-1ZM3.5 15.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2ZM16.132 4.9 12.6 1.368a1 1 0 0 0-1.414 0L9 3.55v9.9l7.132-7.132a1 1 0 0 0 0-1.418Z" />
+                        </svg>
+                        Design
+                    </a>
+                    <h2 class="text-gray-900 mb-2 text-3xl font-extrabold dark:text-white">@article.Title</h2>
+                    <p class="text-gray-500 mb-4 lines-clamp-4 text-lg font-normal dark:text-gray-400 md:lines-clamp-6">@article.Summary</p>
+
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+                        <div>
+                            <p class="text-gray-700 text-sm font-medium">@article.Author</p>
+                            <p class="text-gray-500 text-xs">@article.Date.ToShortDateString()</p>
+                        </div>
+                        <a href="articles/@article.Id" class="mt-4 px-4 py-2 text-white bg-blue-600 inline-flex items-center rounded-lg text-sm font-medium hover:bg-blue-700 md:mt-0">
+                            Read more
+                            <ArrowLeft Class="w-4 h-4 ml-2" />
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </section>
+
+    <section class="p-4 bg-white border-gray-200 w-full rounded-lg border text-center shadow dark:bg-gray-800 dark:border-gray-700 sm:p-8">
+        <h5 class="mb-2 text-gray-900 text-3xl font-bold dark:text-white">Join Our Community</h5>
+        <p class="mb-5 text-gray-500 text-base dark:text-gray-400 sm:text-lg">Sign up now to start sharing your knowledge and connecting with like-minded individuals.</p>
+        <button type="button" class="px-5 py-3 text-white bg-blue-700 w-full rounded-lg text-center text-base font-medium hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 md:w-auto dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Register Now
+        </button>
+    </section>
+}
+
+@code
+{
+    private List<Article>? articles;
+    private bool errorOccurred;
+
+    private Article? FrontpageArticle => articles is { Count: > 0 } ? articles[0] : null;
+    private IEnumerable<Article> OtherArticles => articles?.Skip(1) ?? [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            articles = await JsonHelper.ReadJsonAsync<Article>("sample-data/recents-articles.json");
+        }
+        catch (Exception)
+        {
+            errorOccurred = true;
+        }
+    }
+}
