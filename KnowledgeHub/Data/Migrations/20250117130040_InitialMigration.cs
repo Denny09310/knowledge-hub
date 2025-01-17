@@ -20,7 +20,7 @@ namespace KnowledgeHub.Data.Migrations
                     Content = table.Column<string>(type: "TEXT", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
-                    TotalReactions = table.Column<int>(type: "INTEGER", nullable: false, computedColumnSql: "(SELECT COUNT(*) FROM Reactions WHERE Reactions.ArticleId = Id)", stored: true)
+                    TotalReactions = table.Column<int>(type: "INTEGER", nullable: false, defaultValue: 0)
                 },
                 constraints: table =>
                 {

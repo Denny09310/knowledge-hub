@@ -53,7 +53,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .IsRequired();
 
             entity.Property(a => a.TotalReactions)
-                  .HasComputedColumnSql("(SELECT COUNT(*) FROM Reactions WHERE Reactions.ArticleId = Id)", stored: true);
+                  .HasDefaultValue(0);
 
             entity.HasMany(a => a.Categories)
                   .WithMany(c => c.Articles)

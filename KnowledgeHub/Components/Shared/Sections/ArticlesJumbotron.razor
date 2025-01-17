@@ -2,18 +2,11 @@
 
 @using Markdig
 
-@inject JsonHelper JsonHelper
+@inject ArticlesService ArticlesService
 
 @if (articles == null)
 {
     @* TODO: Display a skeleton representing the format below, possibly create a separate component *@
-}
-else if (errorOccurred)
-{
-    <div class="text-red-500 p-4 border-red-400 bg-red-50 rounded-lg border">
-        <p>There was an error loading the articles. Please try again later.</p>
-        <button class="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" onclick="window.location.reload()">Retry</button>
-    </div>
 }
 else
 {
@@ -32,7 +25,7 @@ else
                     Tutorial
                 </a>
                 <h1 class="text-gray-900 mb-2 text-3xl font-extrabold dark:text-white md:text-5xl">@FrontpageArticle.Title</h1>
-                <p class="text-gray-500 mb-6 lines-clamp-4 text-lg font-normal dark:text-gray-400 md:lines-clamp-6">
+                <p class="text-gray-500 mb-6 line-clamp-4 text-lg font-normal dark:text-gray-400 md:line-clamp-6">
                     @Markdown.ToPlainText(FrontpageArticle.Content)
                 </p>
 
@@ -70,7 +63,7 @@ else
                         Design
                     </a>
                     <h2 class="text-gray-900 mb-2 text-3xl font-extrabold dark:text-white">@article.Title</h2>
-                    <p class="text-gray-500 mb-4 lines-clamp-4 text-lg font-normal dark:text-gray-400 md:lines-clamp-6">
+                    <p class="text-gray-500 mb-4 line-clamp-4 text-lg font-normal dark:text-gray-400 md:line-clamp-6">
                         @Markdown.ToPlainText(article.Content)
                     </p>
 
@@ -94,20 +87,12 @@ else
 @code
 {
     private List<Article>? articles;
-    private bool errorOccurred;
 
     private Article? FrontpageArticle => articles is { Count: > 0 } ? articles[0] : null;
     private IEnumerable<Article> OtherArticles => articles?.Skip(1) ?? [];
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            articles = await JsonHelper.ReadJsonAsync<Article>("sample-data/recents-articles.json");
-        }
-        catch (Exception)
-        {
-            errorOccurred = true;
-        }
+        articles = await ArticlesService.GetFeaturedArticlesAsync();
     }
 }

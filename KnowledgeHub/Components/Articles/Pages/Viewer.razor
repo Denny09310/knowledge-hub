@@ -3,7 +3,7 @@
 
 @using Markdig
 
-@inject JsonHelper JsonHelper
+@inject ArticlesService ArticlesService
 
 @if (article == null)
 {
@@ -23,6 +23,7 @@ else
 @code
 {
     private static readonly MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
         .DisableHtml()
         .Build();
 
@@ -38,7 +39,6 @@ else
             throw new ArgumentException("To show an article, must be provided a valid id.", nameof(Id));
         }
 
-        article = (await JsonHelper.ReadJsonAsync<Article>("sample-data/recents-articles.json"))
-            .First(x => x.Id == Id);
+        article = await ArticlesService.GetArticleAsync(Id);
     }
 }

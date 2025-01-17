@@ -56,9 +56,9 @@ namespace KnowledgeHub.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TotalReactions")
-                        .ValueGeneratedOnAddOrUpdate()
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
-                        .HasComputedColumnSql("(SELECT COUNT(*) FROM Reactions WHERE Reactions.ArticleId = Id)", true);
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 

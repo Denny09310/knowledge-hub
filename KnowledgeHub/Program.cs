@@ -1,6 +1,7 @@
 using KnowledgeHub.Components;
 using KnowledgeHub.Data;
-using KnowledgeHub.Utils;
+using KnowledgeHub.Models;
+using KnowledgeHub.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,8 @@ builder.Services.AddRazorComponents();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite($"Data Source={Path.Combine(Path.GetTempPath(), "knowledge-hub.sqlite3")}"));
 
-builder.Services.AddScoped<JsonHelper>();
+builder.Services.AddScoped<ArticlesService>();
+builder.Services.AddScoped<CategoriesService>();
 
 var app = builder.Build();
 
