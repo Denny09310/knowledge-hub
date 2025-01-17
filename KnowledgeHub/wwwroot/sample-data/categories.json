@@ -1,0 +1,22 @@
+[
+  {
+    "id": "a1f5f5b8-1d7b-4e09-84ff-4f8bc2a88a91",
+    "name": "Technology",
+    "icon": "Laptop"
+  },
+  {
+    "id": "b44c74f1-c9d1-4f77-8759-81b9466f3d2f",
+    "name": "Science",
+    "icon": "Atom"
+  },
+  {
+    "id": "c87d1602-3c3b-4ff2-83b9-542cbcbf6b71",
+    "name": "Health",
+    "icon": "Heartbeat"
+  },
+  {
+    "id": "d42d572b-0b5a-4fe2-bd10-9ed8241bc7b4",
+    "name": "Environment",
+    "icon": "Leaf"
+  }
+]
