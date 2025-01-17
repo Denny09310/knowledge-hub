@@ -1,0 +1,17 @@
+﻿@page "/articles/{Id}"
+
+<h3>Article</h3>
+
+@code 
+{
+    [Parameter]
+    public string Id { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(Id))
+        {
+            throw new ArgumentException("To show an article, must be provided a valid id.", nameof(Id));
+        }
+    }
+}
