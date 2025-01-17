@@ -8,6 +8,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Article> Articles { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -93,6 +94,41 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.Property(r => r.Timestamp)
                   .IsRequired();
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+
+            entity.Property(u => u.Id)
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(u => u.Email)
+                  .IsRequired()
+                  .HasMaxLength(255);
+
+            entity.Property(u => u.Password)
+                  .IsRequired()
+                  .HasMaxLength(255);
+
+            entity.Property(u => u.Username)
+                  .HasMaxLength(50); 
+
+            entity.Property(u => u.CreatedAt)
+                  .IsRequired();
+
+            entity.Property(u => u.UpdatedAt)
+                  .IsRequired();
+
+            entity.Property(u => u.DeletedAt)
+                  .IsRequired(false);
+
+            entity.Ignore(u => u.IsDeleted);
+
+            entity.HasMany(u => u.Articles)
+                  .WithOne(a => a.User)
+                  .HasForeignKey(a => a.AuthorId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

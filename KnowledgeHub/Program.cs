@@ -1,7 +1,7 @@
 using KnowledgeHub.Components;
 using KnowledgeHub.Data;
-using KnowledgeHub.Models;
 using KnowledgeHub.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +12,15 @@ builder.Services.AddRazorComponents();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite($"Data Source={Path.Combine(Path.GetTempPath(), "knowledge-hub.sqlite3")}"));
 
-builder.Services.AddScoped<ArticlesService>();
-builder.Services.AddScoped<CategoriesService>();
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
+
+builder.Services.AddScoped<UserContext>();
+builder.Services.AddScoped<ArticleService>();
+builder.Services.AddScoped<CategoryService>();
 
 var app = builder.Build();
 

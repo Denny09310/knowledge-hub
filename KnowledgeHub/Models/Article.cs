@@ -14,6 +14,13 @@ public class Article
 
     #endregion Computed Properties
 
+    #region Foreign Properties
+
+    public string AuthorId { get; set; } = default!;
+    public User User { get; set; } = default!;
+
+    #endregion Foreign Properties
+
     #region Navigation Properties
 
     public ICollection<Category> Categories { get; set; } = [];

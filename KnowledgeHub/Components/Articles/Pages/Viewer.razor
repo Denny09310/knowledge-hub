@@ -1,9 +1,9 @@
-﻿@page "/articles/{Id}"
+﻿@page "/Articles/{Id}"
 @attribute [StreamRendering]
 
 @using Markdig
 
-@inject ArticlesService ArticlesService
+@inject ArticleService ArticlesService
 
 @if (article == null)
 {

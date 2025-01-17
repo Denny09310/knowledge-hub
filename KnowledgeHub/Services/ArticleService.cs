@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeHub.Services;
 
-public class ArticlesService(ApplicationDbContext db)
+public class ArticleService(ApplicationDbContext db)
 {
     private readonly ApplicationDbContext _db = db;
 

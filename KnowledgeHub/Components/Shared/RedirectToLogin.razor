@@ -1,0 +1,10 @@
+﻿@namespace KnowledgeHub.Components
+@inject NavigationManager NavigationManager
+
+@code
+{
+    protected override void OnInitialized()
+    {
+        NavigationManager.NavigateTo($"Account/Login?{Uri.EscapeDataString(NavigationManager.Uri)}");
+    }
+}
