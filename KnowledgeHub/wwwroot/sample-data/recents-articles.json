@@ -1,22 +1,22 @@
 [
   {
-    "id": "1ED75DAA-F9D0-49B4-942C-1D7EE546515B",
-    "title": "The Future of Artificial Intelligence",
-    "summary": "Exploring the potential impacts and advancements of AI in the coming decades.",
-    "author": "Dr. Jane Smith",
-    "date": "2023-05-15"
+    "id": "7AD19587-A721-4DEC-A6E3-533C7B83C157",
+    "title": "The Power of Lifelong Learning",
+    "content": "Discover how embracing **continuous education** can transform your *personal* and *professional* life. It's not just about acquiring knowledge, but about fostering a growth mindset. > *'Learning is a never-ending journey.'* Check out the [full article](#) for more insights!",
+    "author": "Prof. Alex Thompson",
+    "date": "2023-05-16"
   },
   {
     "id": "9E887C18-5AF6-4EA5-A889-35F7F9D283E1",
     "title": "Sustainable Living: Small Changes, Big Impact",
-    "summary": "Practical tips for reducing your carbon footprint and living a more eco-friendly life.",
+    "content": "Practical tips for reducing your carbon footprint and living a more eco-friendly life.",
     "author": "Michael Green",
     "date": "2023-05-14"
   },
   {
     "id": "ECBE05D7-BAF0-4CE5-A953-103547D6EF19",
     "title": "The Art of Productive Procrastination",
-    "summary": "Learn how to make the most of your procrastination habits and boost creativity.",
+    "content": "Learn how to make the most of your procrastination habits and boost creativity.",
     "author": "Sarah Johnson",
     "date": "2023-05-13"
   }

@@ -3,6 +3,8 @@
 @plugin "flowbite/plugin";
 @source "./node_modules/flowbite/**/*.js";
 
+@plugin "@tailwindcss/typography";
+
 h1:focus {
     outline: none;
 }

@@ -1,5 +1,7 @@
 ﻿@namespace KnowledgeHub.Components
 
+@using KnowledgeHub.Components.Layout
+
 <nav class="bg-white top-0 start-0 border-gray-200 fixed z-20 w-full border-b dark:bg-gray-900 dark:border-gray-600">
     <div class="p-4 mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
         <a href="https://flowbite.com/" class="space-x-3 flex items-center rtl:space-x-reverse">
@@ -21,7 +23,7 @@
         </div>
         <div class="hidden w-full items-center justify-between md:flex md:w-auto md:order-1" id="main-navbar">
             <Searchbar Class="mt-3 md:hidden" />
-            <KnowledgeHub.Components.Layout.NavMenu />
+            <NavMenu />
         </div>
     </div>
 </nav>

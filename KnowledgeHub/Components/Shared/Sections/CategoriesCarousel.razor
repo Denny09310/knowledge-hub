@@ -1,0 +1,53 @@
+﻿@namespace KnowledgeHub.Components
+
+@inject JsonHelper JsonHelper
+
+@if (categories == null)
+{
+    @* TODO: Display a skeleton representing the format below, possibly create a separate component *@
+}
+else
+{
+    <div id="categories-carousel" class="mb-8 relative w-full" data-carousel="static">
+        <!-- Carousel wrapper -->
+        <div class="h-40 relative overflow-hidden rounded-lg">
+            @foreach (var group in categories.Chunk(3))
+            {
+                <div class="space-x-4 p-1 flex hidden duration-700 ease-in-out" data-carousel-item>
+                    @foreach (var category in group)
+                    {
+                        <a href="#" class="p-6 bg-white border-gray-200 block w-1/3 rounded-lg border shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                            <h5 class="mb-2 text-gray-900 text-2xl font-bold tracking-tight dark:text-white">@category.Name</h5>
+                            <p class="text-gray-700 font-normal dark:text-gray-400">@category.Count Articles</p>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+        <!-- Slider controls -->
+        <div class="gap-4 mt-4 flex items-center justify-center">
+            <button type="button" class="w-10 h-10 group-focus:ring-4 group-focus:outline-none bg-gray-800/30 group-hover:bg-gray-800/60 group-focus:ring-gray-800/70 inline-flex items-center justify-center rounded-full dark:bg-white/30 dark:group-hover:bg-white/50 dark:group-focus:ring-white" data-carousel-prev>
+                <svg class="w-4 h-4 text-white rtl:rotate-180 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4" />
+                </svg>
+                <span class="sr-only">Previous</span>
+            </button>
+            <button type="button" class="w-10 h-10 group-focus:ring-4 group-focus:outline-none bg-gray-800/30 group-hover:bg-gray-800/60 group-focus:ring-gray-800/70 inline-flex items-center justify-center rounded-full dark:bg-white/30 dark:group-hover:bg-white/50 dark:group-focus:ring-white" data-carousel-next>
+                <svg class="w-4 h-4 text-white rtl:rotate-180 dark:text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                </svg>
+                <span class="sr-only">Next</span>
+            </button>
+        </div>
+    </div>
+}
+
+@code
+{
+    private List<Category>? categories;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await JsonHelper.ReadJsonAsync<Category>("sample-data/categories.json");
+    }
+}
