@@ -15,6 +15,7 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie();
 
+builder.Services.AddScoped<ArticleLoader>();
 builder.Services.AddScoped<UserContext>();
 
 var app = builder.Build();

@@ -5,39 +5,12 @@ namespace KnowledgeHub.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public DbSet<Article> Articles { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Article>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-
-            entity.Property(e => e.Id)
-                  .ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Title)
-                  .IsRequired()
-                  .HasMaxLength(200);
-
-            entity.Property(e => e.Content)
-                  .IsRequired();
-
-            entity.Property(e => e.CreatedAt)
-                  .IsRequired();
-
-            entity.Property(a => a.TotalReactions)
-                  .HasDefaultValue(0);
-
-            entity.HasMany(a => a.Reactions)
-                  .WithOne(r => r.Article)
-                  .HasForeignKey(r => r.ArticleId)
-                  .OnDelete(DeleteBehavior.Cascade);
-        });
 
         modelBuilder.Entity<Reaction>(entity =>
         {
@@ -90,11 +63,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .IsRequired(false);
 
             entity.Ignore(u => u.IsDeleted);
-
-            entity.HasMany(u => u.Articles)
-                  .WithOne(a => a.Author)
-                  .HasForeignKey(a => a.AuthorId)
-                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

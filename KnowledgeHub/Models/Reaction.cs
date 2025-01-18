@@ -7,12 +7,6 @@ public class Reaction
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     public ReactionType Type { get; set; }
     public string UserId { get; set; } = default!;
-
-    #region Navigation Properties
-
-    public Article Article { get; set; } = default!;
-
-    #endregion Navigation Properties
 }
 
 public enum ReactionType
