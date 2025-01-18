@@ -49,7 +49,7 @@ public class ArticleLoader(IConfiguration configuration)
         {
             Title = articleMetadata.Title,
             Author = articleMetadata.Author,
-            Date = articleMetadata.Date,
+            CreatedAt = articleMetadata.CreatedAt,
             Content = htmlContent
         };
     }

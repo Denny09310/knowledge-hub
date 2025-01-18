@@ -35,6 +35,31 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .IsRequired();
         });
 
+        modelBuilder.Entity<Article>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Id)
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(e => e.Title)
+                  .IsRequired()
+                  .HasMaxLength(200);
+
+            entity.Ignore(e => e.Content);
+
+            entity.Property(e => e.CreatedAt)
+                  .IsRequired();
+
+            entity.Property(a => a.TotalReactions)
+                  .HasDefaultValue(0);
+
+            entity.HasMany(a => a.Reactions)
+                  .WithOne(r => r.Article)
+                  .HasForeignKey(r => r.ArticleId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(u => u.Id);
