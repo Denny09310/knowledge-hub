@@ -6,31 +6,12 @@ namespace KnowledgeHub.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<Article> Articles { get; set; }
-    public DbSet<Category> Categories { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Category>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-
-            entity.Property(e => e.Id)
-                  .ValueGeneratedOnAdd();
-
-            entity.Property(e => e.Name)
-                  .IsRequired()
-                  .HasMaxLength(100);
-
-            entity.Property(e => e.Icon)
-                  .HasMaxLength(50);
-
-            entity.Property(e => e.Count)
-                  .HasDefaultValue(0);
-        });
 
         modelBuilder.Entity<Article>(entity =>
         {
@@ -51,17 +32,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.Property(a => a.TotalReactions)
                   .HasDefaultValue(0);
-
-            entity.HasMany(a => a.Categories)
-                  .WithMany(c => c.Articles)
-                  .UsingEntity<Dictionary<string, object>>(
-                    "ArticleCategory",
-                    j => j.HasOne<Category>()
-                          .WithMany()
-                          .HasForeignKey("CategoryId"),
-                    j => j.HasOne<Article>()
-                          .WithMany()
-                          .HasForeignKey("ArticleId"));
 
             entity.HasMany(a => a.Reactions)
                   .WithOne(r => r.Article)
