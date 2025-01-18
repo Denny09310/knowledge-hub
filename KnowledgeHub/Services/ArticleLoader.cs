@@ -6,7 +6,7 @@ using YamlDotNet.Serialization.NamingConventions;
 
 namespace KnowledgeHub.Services;
 
-public class ArticleLoader(IWebHostEnvironment webHostEnvironment)
+public class ArticleLoader(IConfiguration configuration)
 {
     private static readonly IDeserializer _deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
@@ -18,11 +18,12 @@ public class ArticleLoader(IWebHostEnvironment webHostEnvironment)
             .DisableHtml()
             .Build();
 
-    private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+    private readonly IConfiguration _configuration = configuration;
 
     public async Task<Article?> LoadArticleAsync(string id)
     {
-        var articlesPath = Path.Combine(_webHostEnvironment.WebRootPath, "articles");
+        var uploadsPath = _configuration["Uploads:Path"] ?? throw new InvalidOperationException("Upload path not set.");
+        var articlesPath = Environment.ExpandEnvironmentVariables(uploadsPath);
         var articleFilePath = Directory.EnumerateFiles(articlesPath)
             .FirstOrDefault(file => Path.GetFileNameWithoutExtension(file) == id);
 
