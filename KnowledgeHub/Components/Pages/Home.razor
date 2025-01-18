@@ -5,11 +5,11 @@
 
 @if (loading)
 {
-
+    <PageLoader />
 }
 else if (articles == null)
 {
-
+    <DangerAlert Message="No articles found yet." />
 }
 else
 {

@@ -5,11 +5,11 @@
 
 @if (loading)
 {
-
+    <PageLoader />
 }
 else if (article == null)
 {
-
+    <DangerAlert Title="Error!" Message="This article does not exists or has been deleted." />
 }
 else
 {
