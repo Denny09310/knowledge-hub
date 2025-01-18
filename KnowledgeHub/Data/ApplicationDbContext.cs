@@ -5,6 +5,7 @@ namespace KnowledgeHub.Data;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
+    public DbSet<Article> Articles { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<User> Users { get; set; }
 
@@ -76,7 +77,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .HasMaxLength(255);
 
             entity.Property(u => u.Username)
-                  .HasMaxLength(50); 
+                  .HasMaxLength(50);
 
             entity.Property(u => u.CreatedAt)
                   .IsRequired();

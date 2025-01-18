@@ -1,1 +1,41 @@
 ﻿@page "/"
+@attribute [StreamRendering]
+
+@inject ArticleService ArticleService
+
+@if (loading)
+{
+
+}
+else if (articles == null)
+{
+
+}
+else
+{
+    @foreach (var article in articles)
+    {
+        <a href="Articles/@article.Id">@article.Title</a>
+    }
+}
+
+@code
+{
+    private List<Article>? articles;
+    private bool loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            loading = true;
+
+            var result = await ArticleService.GetArticlesAsync();
+            articles = result.Items;
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
+}

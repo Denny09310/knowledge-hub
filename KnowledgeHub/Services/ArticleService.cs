@@ -1,12 +1,13 @@
 ﻿using KnowledgeHub.Models;
 using Markdig;
 using Markdig.Extensions.Yaml;
+using Microsoft.EntityFrameworkCore;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace KnowledgeHub.Services;
 
-public class ArticleLoader(IConfiguration configuration)
+public class ArticleService(IConfiguration configuration, ApplicationDbContext db)
 {
     private static readonly IDeserializer _deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
@@ -19,6 +20,18 @@ public class ArticleLoader(IConfiguration configuration)
             .Build();
 
     private readonly IConfiguration _configuration = configuration;
+    private readonly ApplicationDbContext _db = db;
+
+    public async Task<PagedResult<Article>> GetArticlesAsync(int offset = 0, int limit = 25)
+    {
+        var articles = await _db.Articles.OrderBy(x => x.Title)
+            .Take(limit).Skip(offset)
+            .ToListAsync();
+
+        var count = await _db.Articles.CountAsync();
+
+        return new(articles, count);
+    }
 
     public async Task<Article?> LoadArticleAsync(string id)
     {
@@ -54,3 +67,5 @@ public class ArticleLoader(IConfiguration configuration)
         };
     }
 }
+
+public record struct PagedResult<T>(List<T> Items, int TotalItems);

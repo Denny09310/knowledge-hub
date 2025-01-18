@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KnowledgeHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250118204855_InitialMigration")]
+    [Migration("20250118210553_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -58,12 +58,12 @@ namespace KnowledgeHub.Data.Migrations
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
-                        .HasName("pk_article");
+                        .HasName("pk_articles");
 
                     b.HasIndex("UserId")
-                        .HasDatabaseName("ix_article_user_id");
+                        .HasDatabaseName("ix_articles_user_id");
 
-                    b.ToTable("article", (string)null);
+                    b.ToTable("articles", (string)null);
                 });
 
             modelBuilder.Entity("KnowledgeHub.Models.Reaction", b =>
@@ -150,7 +150,7 @@ namespace KnowledgeHub.Data.Migrations
                     b.HasOne("KnowledgeHub.Models.User", null)
                         .WithMany("Articles")
                         .HasForeignKey("UserId")
-                        .HasConstraintName("fk_article_users_user_id");
+                        .HasConstraintName("fk_articles_users_user_id");
                 });
 
             modelBuilder.Entity("KnowledgeHub.Models.Reaction", b =>
@@ -160,7 +160,7 @@ namespace KnowledgeHub.Data.Migrations
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_reactions_article_article_id");
+                        .HasConstraintName("fk_reactions_articles_article_id");
 
                     b.Navigation("Article");
                 });

@@ -29,7 +29,7 @@ namespace KnowledgeHub.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "article",
+                name: "articles",
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
@@ -41,9 +41,9 @@ namespace KnowledgeHub.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_article", x => x.id);
+                    table.PrimaryKey("pk_articles", x => x.id);
                     table.ForeignKey(
-                        name: "fk_article_users_user_id",
+                        name: "fk_articles_users_user_id",
                         column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "id");
@@ -63,16 +63,16 @@ namespace KnowledgeHub.Data.Migrations
                 {
                     table.PrimaryKey("pk_reactions", x => x.id);
                     table.ForeignKey(
-                        name: "fk_reactions_article_article_id",
+                        name: "fk_reactions_articles_article_id",
                         column: x => x.article_id,
-                        principalTable: "article",
+                        principalTable: "articles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_article_user_id",
-                table: "article",
+                name: "ix_articles_user_id",
+                table: "articles",
                 column: "user_id");
 
             migrationBuilder.CreateIndex(
@@ -88,7 +88,7 @@ namespace KnowledgeHub.Data.Migrations
                 name: "reactions");
 
             migrationBuilder.DropTable(
-                name: "article");
+                name: "articles");
 
             migrationBuilder.DropTable(
                 name: "users");

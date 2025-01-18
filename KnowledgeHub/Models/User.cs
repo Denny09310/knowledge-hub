@@ -2,12 +2,12 @@
 
 public class User
 {
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; }
     public string Email { get; set; } = default!;
     public string Id { get; set; } = default!;
     public string Password { get; set; } = default!;
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public string? Username { get; set; }
 
     #region Computed Properties

@@ -1,19 +1,28 @@
 ﻿@page "/Articles/{Id}"
+@attribute [StreamRendering]
 
-@inject ArticleLoader ArticleLoader
+@inject ArticleService ArticleService
 
-@if (Article != null)
+@if (loading)
+{
+
+}
+else if (article == null)
+{
+
+}
+else
 {
     <div class="gap-4 flex flex-col justify-between md:items-center md:flex-row">
         <div>
-            <h2 id="article-title" class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@Article.Title</h2>
-            <p aria-labelledby="article-title" class="text-gray-700 text-sm font-medium">@Article.Author</p>
-            <p class="text-gray-500 text-xs">@Article.CreatedAt.ToShortDateString()</p>
+            <h2 id="article-title" class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@article.Title</h2>
+            <p aria-labelledby="article-title" class="text-gray-700 text-sm font-medium">@article.Author</p>
+            <p class="text-gray-500 text-xs">@article.CreatedAt.ToShortDateString()</p>
         </div>
     </div>
 
     <div class="prose mt-6 dark:prose-inverse md:mt-8 md:prose-lg lg:prose-xl">
-        @((MarkupString)(Article.Content ?? ""))
+        @((MarkupString)(article.Content ?? ""))
     </div>
 }
 
@@ -22,7 +31,8 @@
     [Parameter]
     public string Id { get; set; } = default!;
 
-    private Article? Article { get; set; }
+    private Article? article;
+    private bool loading;
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,6 +41,14 @@
             throw new ArgumentException("To show an article, a valid id must be provided.", nameof(Id));
         }
 
-        Article = await ArticleLoader.LoadArticleAsync(Id);
+        try
+        {
+            loading = true;
+            article = await ArticleService.LoadArticleAsync(Id);
+        }
+        finally
+        {
+            loading = false;
+        }
     }
 }
