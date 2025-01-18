@@ -8,7 +8,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite($"Data Source={Path.Combine(Path.GetTempPath(), "knowledge-hub.sqlite3")}"));
+    options.UseSqlite($"Data Source={Path.Combine(Path.GetTempPath(), "knowledge-hub-static.sqlite3")}"));
 
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
@@ -17,8 +17,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie();
 
 builder.Services.AddScoped<UserContext>();
-builder.Services.AddScoped<ArticleService>();
-builder.Services.AddScoped<CategoryService>();
 
 var app = builder.Build();
 
@@ -35,7 +33,6 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
-app.MapArticlesEndpoints();
 app.MapIdentityEndpoints();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();

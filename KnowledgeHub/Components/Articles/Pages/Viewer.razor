@@ -18,22 +18,6 @@ else
             <p class="text-gray-700 text-sm font-medium">@(Article.Author.Username ?? Article.Author.Email)</p>
             <p class="text-gray-500 text-xs">@Article.CreatedAt.ToShortDateString()</p>
         </div>
-
-        @if (IsAuthor)
-        {
-            <div class="gap-2 flex items-center">
-                <a href="/Articles/Submit?ArticleId=@Article.Id"
-                   class="text-white bg-blue-700 px-5 py-2.5 me-2 mb-2 rounded-lg text-sm font-medium hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Edit
-                </a>
-                <form method="post" action="/Articles/Delete/@Article.Id">
-                    <button type="submit"
-                            class="text-white bg-red-700 px-5 py-2.5 me-2 mb-2 rounded-lg text-sm font-medium hover:bg-red-800 focus:ring-4 focus:ring-red-300 focus:outline-none dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                        Delete
-                    </button>
-                </form>
-            </div>
-        }
     </div>
 
     <div class="prose mt-6 dark:prose-inverse md:mt-8 md:prose-lg lg:prose-xl">
@@ -65,18 +49,5 @@ else
         }
 
         Article = await ArticlesService.GetArticleAsync(Id);
-        IsAuthor = await IsUserAuthor();
-    }
-
-    private async Task<bool> IsUserAuthor()
-    {
-        var currentUserId = await GetCurrentUserId();
-        return currentUserId == Article?.AuthorId;
-    }
-
-    private async Task<string?> GetCurrentUserId()
-    {
-        var authState = await GetAuthenticationState;
-        return authState?.User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }

@@ -7,17 +7,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
 		<PackageReference Include="Markdig" Version="0.40.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1" />
-		<PackageReference Include="PSC.Blazor.Components.MarkdownEditor" Version="8.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Using Include="BCrypt.Net.BCrypt">
-	    <Alias>Hasher</Alias>
-	  </Using>
 	  <Using Include="KnowledgeHub" />
 	  <Using Include="KnowledgeHub.Components" />
 	  <Using Include="KnowledgeHub.Data" />

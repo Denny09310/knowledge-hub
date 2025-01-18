@@ -22,7 +22,6 @@ public class Article
 
     #region Navigation Properties
 
-    public ICollection<Category> Categories { get; set; } = [];
     public ICollection<Reaction> Reactions { get; set; } = [];
 
     #endregion Navigation Properties
