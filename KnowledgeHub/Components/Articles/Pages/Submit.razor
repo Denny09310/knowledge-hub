@@ -1,6 +1,10 @@
 ﻿@page "/Articles/Submit"
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
+@using Markdig.Renderers
+@using PSC.Blazor.Components.MarkdownEditor
+@using PSC.Blazor.Components.MarkdownEditor.EventsArgs
+
 @attribute [Authorize]
 @rendermode InteractiveServer
 
@@ -26,7 +30,7 @@
 @code
 {
     [SupplyParameterFromQuery]
-    public string? ArticleId { get; set; }
+    public string ArticleId { get; set; } = Guid.NewGuid().ToString();
 
     [CascadingParameter]
     private Task<AuthenticationState> GetAuthenticationState { get; set; } = default!;
@@ -38,11 +42,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (string.IsNullOrEmpty(ArticleId))
-        {
-            AuthorId = await GetCurrentUserId();
-            return;
-        }
+        AuthorId = await GetCurrentUserId();
 
         article = await ArticleService.GetArticleAsync(ArticleId);
         if (article != null)
@@ -58,30 +58,27 @@
 
     private async Task OnValidSubmit()
     {
-        string articleId;
-
         if (article != null)
         {
             article.Title = Input.Title;
             article.Content = Input.Content;
 
             await ArticleService.UpdateArticleAsync(ArticleId!, article);
-            articleId = article.Id;
         }
         else
         {
-            var article = new Article
+            article = new Article
             {
+                Id = ArticleId,
                 AuthorId = AuthorId,
                 Title = Input.Title,
                 Content = Input.Content,
             };
 
             await ArticleService.AddArticleAsync(article);
-            articleId = article.Id;
         }
 
-        NavigationManager.NavigateTo($"Articles/{articleId}");
+        NavigationManager.NavigateTo($"Articles/{article.Id}");
     }
 
     private async Task<string> GetCurrentUserId()

@@ -1,5 +1,4 @@
-﻿using KnowledgeHub.Data;
-using KnowledgeHub.Models;
+﻿using KnowledgeHub.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeHub.Services;
@@ -31,7 +30,9 @@ public class ArticleService(ApplicationDbContext db)
 
     public Task<List<Article>> GetFeaturedArticlesAsync()
     {
-        return _db.Articles.OrderByDescending(x => x.TotalReactions)
+        return _db.Articles.Include(x => x.Author)
+            .OrderByDescending(x => x.TotalReactions)
+            .Take(3)
             .ToListAsync();
     }
 
