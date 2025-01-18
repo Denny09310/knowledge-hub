@@ -18,6 +18,10 @@
 	  <Using Include="BCrypt.Net.BCrypt">
 	    <Alias>Hasher</Alias>
 	  </Using>
+	  <Using Include="KnowledgeHub" />
+	  <Using Include="KnowledgeHub.Components" />
+	  <Using Include="KnowledgeHub.Data" />
+	  <Using Include="KnowledgeHub.Services" />
 	</ItemGroup>
 
 </Project>

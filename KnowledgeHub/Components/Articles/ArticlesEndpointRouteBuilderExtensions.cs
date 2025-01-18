@@ -1,6 +1,6 @@
 ﻿using KnowledgeHub.Services;
 
-namespace KnowledgeHub.Components.Articles;
+namespace KnowledgeHub;
 
 public static class ArticlesEndpointRouteBuilderExtensions
 {

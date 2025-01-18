@@ -58,23 +58,30 @@
 
     private async Task OnValidSubmit()
     {
+        string articleId;
+
         if (article != null)
         {
             article.Title = Input.Title;
             article.Content = Input.Content;
+
             await ArticleService.UpdateArticleAsync(ArticleId!, article);
+            articleId = article.Id;
         }
         else
         {
-            await ArticleService.AddArticleAsync(new Article
+            var article = new Article
             {
                 AuthorId = AuthorId,
                 Title = Input.Title,
                 Content = Input.Content,
-            });
+            };
+
+            await ArticleService.AddArticleAsync(article);
+            articleId = article.Id;
         }
 
-        NavigationManager.NavigateTo($"Articles/{article?.Id ?? "new"}");
+        NavigationManager.NavigateTo($"Articles/{articleId}");
     }
 
     private async Task<string> GetCurrentUserId()

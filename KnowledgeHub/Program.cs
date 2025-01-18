@@ -1,7 +1,3 @@
-using KnowledgeHub.Components;
-using KnowledgeHub.Components.Articles;
-using KnowledgeHub.Data;
-using KnowledgeHub.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,6 +36,7 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapArticlesEndpoints();
+app.MapIdentityEndpoints();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
