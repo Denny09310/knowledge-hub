@@ -7,6 +7,7 @@
     <base href="/" />
     <link rel="stylesheet" href="@Assets["app.output.css"]" />
     <link rel="stylesheet" href="@Assets["KnowledgeHub.styles.css"]" />
+    <link rel="stylesheet" href="@Assets["_lib/prismjs/themes/prism.min.css"]" />
     <ImportMap />
     <HeadOutlet />
 </head>
@@ -14,6 +15,9 @@
 <body class="bg-white text-gray-900 font-sans antialiased dark:bg-gray-800 dark:text-white">
     <Routes />
     <script src="_lib/flowbite/dist/flowbite.min.js"></script>
+    <script src="_lib/anchor-js/anchor.min.js"></script>
+    <script src="_lib/clipboard/dist/clipboard.min.js"></script>
+    <script src="_lib/prismjs/prism.min.js"></script>
     <script src="_framework/blazor.web.js"></script>
     <script>
         Blazor.addEventListener("enhanchedload", () => {

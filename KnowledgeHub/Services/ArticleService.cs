@@ -1,21 +1,13 @@
 ﻿using KnowledgeHub.Models;
 using Markdig;
-using Markdig.Extensions.Yaml;
 using Microsoft.EntityFrameworkCore;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace KnowledgeHub.Services;
 
 public class ArticleService(IConfiguration configuration, ApplicationDbContext db)
 {
-    private static readonly IDeserializer _deserializer = new DeserializerBuilder()
-            .WithNamingConvention(UnderscoredNamingConvention.Instance)
-            .Build();
-
     private static readonly MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
-            .UseYamlFrontMatter()
             .DisableHtml()
             .Build();
 
@@ -35,6 +27,13 @@ public class ArticleService(IConfiguration configuration, ApplicationDbContext d
 
     public async Task<Article?> LoadArticleAsync(string id)
     {
+        var article = await _db.Articles.FindAsync([id]);
+
+        if (article == null)
+        {
+            return null;
+        }
+
         var uploadsPath = _configuration["Uploads:Path"] ?? throw new InvalidOperationException("Upload path not set.");
         var articlesPath = Environment.ExpandEnvironmentVariables(uploadsPath);
         var articleFilePath = Directory.EnumerateFiles(articlesPath)
@@ -43,28 +42,9 @@ public class ArticleService(IConfiguration configuration, ApplicationDbContext d
         if (string.IsNullOrEmpty(articleFilePath))
             return null;
 
-        var articleContent = await File.ReadAllTextAsync(articleFilePath);
-        var articleMarkdown = Markdown.Parse(articleContent, _pipeline);
+        article.Content = Markdown.ToHtml(await File.ReadAllTextAsync(articleFilePath), _pipeline);
 
-        var articleMetadataBlock = articleMarkdown
-            .OfType<YamlFrontMatterBlock>()
-            .FirstOrDefault();
-
-        if (articleMetadataBlock == null)
-            return null;
-
-        articleMarkdown.Remove(articleMetadataBlock);
-
-        var articleMetadata = _deserializer.Deserialize<Article>(articleMetadataBlock.Lines.ToString());
-        var htmlContent = articleMarkdown.ToHtml();
-
-        return new Article
-        {
-            Title = articleMetadata.Title,
-            Author = articleMetadata.Author,
-            CreatedAt = articleMetadata.CreatedAt,
-            Content = htmlContent
-        };
+        return article;
     }
 }
 

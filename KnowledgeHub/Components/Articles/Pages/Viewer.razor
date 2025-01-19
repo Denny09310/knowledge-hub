@@ -1,4 +1,5 @@
 ﻿@page "/Articles/{Id}"
+@using BlazorPageScript
 @attribute [StreamRendering]
 
 @inject ArticleService ArticleService
@@ -13,7 +14,7 @@ else if (article == null)
 }
 else
 {
-    <div class="gap-4 flex flex-col justify-between md:items-center md:flex-row">
+    <div class="gap-4 mb-8 flex flex-col justify-between md:items-center md:flex-row">
         <div>
             <h2 id="article-title" class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@article.Title</h2>
             <p aria-labelledby="article-title" class="text-gray-700 text-sm font-medium">@article.Author</p>
@@ -21,9 +22,11 @@ else
         </div>
     </div>
 
-    <div class="prose mt-6 dark:prose-inverse md:mt-8 md:prose-lg lg:prose-xl">
+    <div class="prose scroll-smooth dark:prose-inverse">
         @((MarkupString)(article.Content ?? ""))
     </div>
+    
+    <PageScript Src="./Components/Articles/Pages/Viewer.razor.js" />
 }
 
 @code
