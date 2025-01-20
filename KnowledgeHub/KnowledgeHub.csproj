@@ -31,8 +31,9 @@
 	<ItemGroup>
 	  <Using Include="KnowledgeHub" />
 	  <Using Include="KnowledgeHub.Components" />
+	  <Using Include="KnowledgeHub.Components.Account" />
+	  <Using Include="KnowledgeHub.Components.Articles" />
 	  <Using Include="KnowledgeHub.Data" />
-	  <Using Include="KnowledgeHub.Services" />
 	</ItemGroup>
 
 </Project>

@@ -5,18 +5,29 @@
 // Initializes features like anchor links, clipboard functionality, and syntax highlighting
 function initializeFeatures() {
     addHeadingAnchors();
+    transformLocalAnchorsToFullURL();
     enableClipboardButtons();
     Prism.highlightAll(); 
+}
+
+// Transforms all local anchors into full URL anchors to the current page
+function transformLocalAnchorsToFullURL() {
+    const anchors = document.querySelectorAll('a[href^="#"]');
+    const currentURL = window.location.href.split('#')[0];
+
+    anchors.forEach(anchor => {
+        anchor.href = `${currentURL}${anchor.getAttribute('href')}`;
+    });
 }
 
 // Adds anchor links to heading elements for easier navigation
 function addHeadingAnchors() {
     const headingSelectors = [
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
+        '#markdown-body h2',
+        '#markdown-body h3',
+        '#markdown-body h4',
+        '#markdown-body h5',
+        '#markdown-body h6',
     ];
     anchors.add(headingSelectors.join(','));
 }

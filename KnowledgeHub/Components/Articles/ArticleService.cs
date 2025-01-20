@@ -1,14 +1,14 @@
 ﻿using Markdig;
 using Microsoft.EntityFrameworkCore;
 
-namespace KnowledgeHub.Services;
+namespace KnowledgeHub.Components.Articles;
 
 public class ArticleService(IConfiguration configuration, ApplicationDbContext db)
 {
     private static readonly MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
-            .UseAdvancedExtensions()
-            .DisableHtml()
-            .Build();
+        .UseAdvancedExtensions()
+        .DisableHtml()
+        .Build();
 
     private readonly IConfiguration _configuration = configuration;
     private readonly ApplicationDbContext _db = db;

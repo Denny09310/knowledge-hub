@@ -1,4 +1,4 @@
-﻿@page "/{Id}"
+﻿@page "/Articles/{Id}"
 @attribute [StreamRendering]
 
 @inject ArticleService ArticleService
@@ -21,7 +21,7 @@ else
         </div>
     </div>
 
-    <div class="prose scroll-smooth dark:prose-inverse">
+    <div id="markdown-body" class="prose scroll-smooth dark:prose-inverse">
         @((MarkupString)(article.Content ?? ""))
     </div>
     
