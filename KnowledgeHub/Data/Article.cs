@@ -1,4 +1,4 @@
-﻿namespace KnowledgeHub.Models;
+﻿namespace KnowledgeHub.Data;
 
 public class Article
 {
@@ -9,10 +9,13 @@ public class Article
     public string Title { get; set; } = default!;
     public int TotalReactions { get; set; }
 
+    public string UserId { get; set; } = default!;
+
     #region Navigation Properties
 
     public ICollection<Reaction> Reactions { get; set; } = [];
 
+    public ApplicationUser User { get; set; } = default!;
 
     #endregion Navigation Properties
 }

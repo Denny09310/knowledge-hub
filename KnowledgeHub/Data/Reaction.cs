@@ -1,4 +1,4 @@
-﻿namespace KnowledgeHub.Models;
+﻿namespace KnowledgeHub.Data;
 
 public class Reaction
 {

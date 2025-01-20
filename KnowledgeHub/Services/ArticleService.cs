@@ -1,5 +1,4 @@
-﻿using KnowledgeHub.Models;
-using Markdig;
+﻿using Markdig;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeHub.Services;

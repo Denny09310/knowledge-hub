@@ -1,19 +1,36 @@
-﻿using KnowledgeHub.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeHub.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
 {
     public DbSet<Article> Articles { get; set; }
     public DbSet<Reaction> Reactions { get; set; }
-    public DbSet<User> Users { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        optionsBuilder.UseSnakeCaseNamingConvention();
+    }
 
-        modelBuilder.Entity<Reaction>(entity =>
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        #region Name Overrides
+
+        builder.Entity<ApplicationUser>().ToTable("asp_net_users");
+        builder.Entity<IdentityUserToken<string>>().ToTable("asp_net_user_tokens");
+        builder.Entity<IdentityUserLogin<string>>().ToTable("asp_net_user_logins");
+        builder.Entity<IdentityUserClaim<string>>().ToTable("asp_net_user_claims");
+        builder.Entity<IdentityRole>().ToTable("asp_net_roles");
+        builder.Entity<IdentityUserRole<string>>().ToTable("asp_net_user_roles");
+        builder.Entity<IdentityRoleClaim<string>>().ToTable("asp_net_role_claims");
+
+        #endregion
+
+        builder.Entity<Reaction>(entity =>
         {
             entity.HasKey(r => r.Id);
 
@@ -36,7 +53,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .IsRequired();
         });
 
-        modelBuilder.Entity<Article>(entity =>
+        builder.Entity<Article>(entity =>
         {
             entity.HasKey(e => e.Id);
 
@@ -61,24 +78,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
-        modelBuilder.Entity<User>(entity =>
+        builder.Entity<ApplicationUser>(entity =>
         {
-            entity.HasKey(u => u.Id);
-
-            entity.Property(u => u.Id)
-                  .ValueGeneratedOnAdd();
-
-            entity.Property(u => u.Email)
-                  .IsRequired()
-                  .HasMaxLength(255);
-
-            entity.Property(u => u.Password)
-                  .IsRequired()
-                  .HasMaxLength(255);
-
-            entity.Property(u => u.Username)
-                  .HasMaxLength(50);
-
             entity.Property(u => u.CreatedAt)
                   .IsRequired();
 
@@ -88,7 +89,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Property(u => u.DeletedAt)
                   .IsRequired(false);
 
-            entity.Ignore(u => u.IsDeleted);
+            entity.HasMany(a => a.Articles)
+                  .WithOne(r => r.User)
+                  .HasForeignKey(r => r.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
