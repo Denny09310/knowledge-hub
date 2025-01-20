@@ -1,9 +1,9 @@
 ﻿@page "/Articles/{Id}"
 @attribute [StreamRendering]
 
-@inject ArticlesRenderer ArticlesRenderer
+@inject ArticleRenderer ArticleRenderer
 
-@if (loading)
+@if (isLoading)
 {
     <PageLoader />
 }
@@ -34,7 +34,7 @@ else
     public string Id { get; set; } = default!;
 
     private Article? article;
-    private bool loading;
+    private bool isLoading;
 
     protected override async Task OnInitializedAsync()
     {
@@ -45,12 +45,12 @@ else
 
         try
         {
-            loading = true;
-            article = await ArticlesRenderer.LoadArticleAsync(Id);
+            isLoading = true;
+            article = await ArticleRenderer.LoadArticleAsync(Id);
         }
         finally
         {
-            loading = false;
+            isLoading = false;
         }
     }
 }

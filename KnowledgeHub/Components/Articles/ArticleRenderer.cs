@@ -2,7 +2,7 @@
 
 namespace KnowledgeHub.Components.Articles;
 
-public class ArticlesRenderer(IConfiguration configuration, ApplicationDbContext db)
+public class ArticleRenderer(IConfiguration configuration, ApplicationDbContext db)
 {
     private static readonly MarkdownPipeline _pipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()

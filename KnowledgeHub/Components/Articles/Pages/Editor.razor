@@ -1,0 +1,62 @@
+﻿@page "/Articles/Editor"
+@using System.Security.Claims
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+@inject ArticlesManager ArticlesManager
+@inject ArticleAccessor ArticleAccessor
+
+@if (isLoading)
+{
+    <PageLoader />
+}
+else if (article == null)
+{
+    <DangerAlert Title="Error!" Message="This article does not exists or has been deleted." />
+}
+else if (!isAuthor)
+{
+    <p>You are not the author of this article. You can't modify it</p>
+}
+else
+{
+
+}
+
+@code
+{
+    [SupplyParameterFromQuery]
+    public string? Id { get; set; }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> GetAuthenticationState { get; set; } = default!;
+
+    private Article? article;
+    private bool isAuthor;
+    private bool isLoading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            isLoading = true;
+            await LoadArticleAsync();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadArticleAsync()
+    {
+        if (string.IsNullOrEmpty(Id))
+        {
+            isAuthor = true;
+            return;
+        }
+
+        article = await ArticlesManager.GetArticleAsync(Id);
+        isAuthor = await ArticleAccessor.IsUserAuthor(article);
+    }
+}

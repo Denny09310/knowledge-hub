@@ -16,6 +16,11 @@ public class ArticlesManager(ApplicationDbContext db)
 
         return new(articles, count);
     }
+
+    public async Task<Article?> GetArticleAsync(string articleId)
+    {
+        return await _db.Articles.FindAsync(articleId);
+    }
 }
 
 public record struct PagedResult<T>(List<T> Items, int TotalItems);

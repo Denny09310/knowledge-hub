@@ -3,7 +3,7 @@
 
 @inject ArticlesManager ArticlesManager
 
-@if (loading)
+@if (isLoading)
 {
     <PageLoader />
 }
@@ -22,20 +22,20 @@ else
 @code
 {
     private List<Article>? articles;
-    private bool loading;
+    private bool isLoading;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            loading = true;
+            isLoading = true;
 
             var result = await ArticlesManager.GetArticlesAsync();
             articles = result.Items;
         }
         finally
         {
-            loading = false;
+            isLoading = false;
         }
     }
 }
