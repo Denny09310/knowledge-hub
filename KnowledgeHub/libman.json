@@ -28,7 +28,8 @@
       "library": "prismjs@1.29.0",
       "destination": "wwwroot/_lib/prismjs/",
       "files": [
-        "prism.min.js",
+        "plugins/autoloader/prism-autoloader.min.js",
+        "components/*.min.js",
         "themes/*.min.css"
       ]
     }

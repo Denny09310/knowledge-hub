@@ -47,7 +47,7 @@ function enableClipboardButtons() {
 // Creates a "Copy" button element for code blocks
 function createCopyButton() {
     const button = document.createElement('button');
-    button.className = 'copy-button relative group';
+    button.className = 'copy-button';
     button.type = 'button';
     button.innerHTML = getCopyButtonSVG();
     button.onclick = handleCopyButtonClick;

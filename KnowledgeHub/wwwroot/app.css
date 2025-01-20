@@ -5,6 +5,8 @@
 
 @plugin "@tailwindcss/typography";
 
+@variant dark (&:where(.dark, .dark *));
+
 h1:focus {
     outline: none;
 }

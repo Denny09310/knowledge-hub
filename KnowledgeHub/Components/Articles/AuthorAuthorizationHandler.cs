@@ -15,7 +15,7 @@ public class AuthorAuthorizationHandler : AuthorizationHandler<AuthorRequirement
             return Task.CompletedTask;
         }
 
-        if ((resource?.UserId) != userId)
+        if (resource?.UserId != userId)
         {
             context.Fail();
             return Task.CompletedTask;
