@@ -17,44 +17,53 @@
 
 <PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
-
-<div class="row">
-    <div class="col-lg-6">
+<div class="flex min-h-screen items-center justify-center">
+    <div class="bg-white p-8 w-full max-w-md rounded-lg shadow-lg dark:bg-gray-800">
+        <h1 class="text-gray-800 mb-6 text-center text-2xl font-bold dark:text-gray-100">Register</h1>
         <StatusMessage Message="@Message" />
-        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register" class="space-y-6">
             <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
-            <hr />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="Input.Email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
+            <ValidationSummary class="text-red-500" role="alert" />
+
+            <div>
+                <label for="Input.Email" class="text-gray-700 block text-sm font-medium dark:text-gray-300">Email</label>
+                <div class="mt-1">
+                    <InputText @bind-Value="Input.Email" id="Input.Email" class="bg-gray-50 border-gray-300 text-gray-900 p-2.5 block w-full rounded-lg border text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                </div>
+                <ValidationMessage For="() => Input.Email" class="text-red-500 mt-1 text-sm" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.Password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
+
+            <div>
+                <label for="Input.Password" class="text-gray-700 block text-sm font-medium dark:text-gray-300">Password</label>
+                <div class="mt-1">
+                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="bg-gray-50 border-gray-300 text-gray-900 p-2.5 block w-full rounded-lg border text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
+                </div>
+                <ValidationMessage For="() => Input.Password" class="text-red-500 mt-1 text-sm" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.ConfirmPassword">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+
+            <div>
+                <label for="Input.ConfirmPassword" class="text-gray-700 block text-sm font-medium dark:text-gray-300">Confirm Password</label>
+                <div class="mt-1">
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="bg-gray-50 border-gray-300 text-gray-900 p-2.5 block w-full rounded-lg border text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="new-password" aria-required="true" placeholder="••••••••" />
+                </div>
+                <ValidationMessage For="() => Input.ConfirmPassword" class="text-red-500 mt-1 text-sm" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+
+            <div>
+                <button type="submit" class="bg-blue-600 text-white py-2 px-4 w-full rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-offset-gray-800">Register</button>
+            </div>
         </EditForm>
-    </div>
-    <div class="col-lg-4 col-lg-offset-2">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
+
+        <div class="mt-6">
+            <h3 class="text-gray-800 text-center text-lg font-medium dark:text-gray-100">Use another service to register</h3>
+            <hr class="my-4 border-gray-200 dark:border-gray-700">
             <ExternalLoginPicker />
-        </section>
+        </div>
     </div>
 </div>
 
-@code {
+@code 
+{
     private IEnumerable<IdentityError>? identityErrors;
 
     [SupplyParameterFromForm]
