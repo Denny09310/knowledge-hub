@@ -1,7 +1,7 @@
 ﻿@page "/"
 @attribute [StreamRendering]
 
-@inject ArticleService ArticleService
+@inject ArticlesManager ArticlesManager
 
 @if (loading)
 {
@@ -30,7 +30,7 @@ else
         {
             loading = true;
 
-            var result = await ArticleService.GetArticlesAsync();
+            var result = await ArticlesManager.GetArticlesAsync();
             articles = result.Items;
         }
         finally

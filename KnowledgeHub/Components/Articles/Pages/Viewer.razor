@@ -1,7 +1,7 @@
 ﻿@page "/Articles/{Id}"
 @attribute [StreamRendering]
 
-@inject ArticleService ArticleService
+@inject ArticlesRenderer ArticlesRenderer
 
 @if (loading)
 {
@@ -46,7 +46,7 @@ else
         try
         {
             loading = true;
-            article = await ArticleService.LoadArticleAsync(Id);
+            article = await ArticlesRenderer.LoadArticleAsync(Id);
         }
         finally
         {

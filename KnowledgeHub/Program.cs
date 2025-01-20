@@ -31,7 +31,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-builder.Services.AddScoped<ArticleService>();
+builder.Services.AddScoped<ArticlesManager>();
+builder.Services.AddScoped<ArticlesRenderer>();
 
 var app = builder.Build();
 
