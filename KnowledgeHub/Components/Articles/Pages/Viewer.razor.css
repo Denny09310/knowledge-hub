@@ -1,12 +1,12 @@
 ﻿::deep pre {
     background: var(--tw-prose-pre-bg) !important;
     position: relative;
-    padding: 0;
 }
 
     ::deep pre[class*=language-] {
         overflow: hidden;
         margin-bottom: 1rem;
+        padding: 0;
     }
 
     ::deep pre code {
