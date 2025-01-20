@@ -1,6 +1,7 @@
 ﻿@page "/Articles/Editor"
-@using Microsoft.AspNetCore.Authorization
-@using System.Security.Claims
+@rendermode InteractiveServer
+@using PSC.Blazor.Components.MarkdownEditor
+@using PSC.Blazor.Components.MarkdownEditor.EventsArgs
 
 @inject IAuthorizationService AuthorizationService
 @inject ArticlesManager ArticlesManager
@@ -19,8 +20,9 @@ else if (article == null)
 }
 else
 {
-    <h3>Edit Article</h3>
-    <!-- Add article editing form here -->
+    <div class="markdown-container">
+        <MarkdownEditor />
+    </div>
 }
 
 @code
@@ -40,7 +42,14 @@ else
         try
         {
             isLoading = true;
-            await LoadArticleAsync();
+
+            if (string.IsNullOrEmpty(Id))
+            {
+                InitializeEditor();
+                return;
+            }
+
+            article = await ArticlesManager.GetArticleAsync(Id);
             await CheckAuthorizationAsync();
         }
         finally
@@ -49,14 +58,10 @@ else
         }
     }
 
-    private async Task LoadArticleAsync()
+    private void InitializeEditor()
     {
-        if (string.IsNullOrEmpty(Id))
-        {
-            return;
-        }
-
-        article = await ArticlesManager.GetArticleAsync(Id);
+        article = new();
+        hasPermissionToEdit = true;
     }
 
     private async Task CheckAuthorizationAsync()

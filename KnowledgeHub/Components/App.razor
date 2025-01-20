@@ -5,24 +5,44 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
+
+    <!-- General CSS Styles -->
     <link rel="stylesheet" href="@Assets["app.output.css"]" />
     <link rel="stylesheet" href="@Assets["KnowledgeHub.styles.css"]" />
+
+    <!-- Markdown Editor Styles -->
+    <link rel="stylesheet" href="@Assets["_content/PSC.Blazor.Components.MarkdownEditor/css/easymde.min.css"]" />
+    <link rel="stylesheet" href="@Assets["_content/PSC.Blazor.Components.MarkdownEditor/css/markdowneditor.css"]" />
+
+    <!-- PrismJS Syntax Highlighting -->
     <link rel="stylesheet" href="@Assets["_lib/prismjs/themes/prism.min.css"]" />
+
+    <!-- Head Scripts/Links -->
     <ImportMap />
     <HeadOutlet />
 </head>
 
 <body class="bg-white text-gray-900 font-sans antialiased dark:bg-gray-800 dark:text-white">
     <Routes />
+
+    <!-- Core Framework Scripts -->
+    <script src="_framework/blazor.web.js"></script>
+
+    <!-- Third-Party Libraries -->
     <script src="_lib/flowbite/dist/flowbite.min.js"></script>
     <script src="_lib/anchor-js/anchor.min.js"></script>
     <script src="_lib/clipboard/dist/clipboard.min.js"></script>
     <script src="_lib/prismjs/prism.min.js"></script>
-    <script src="_framework/blazor.web.js"></script>
+
+    <!-- Markdown Editor Scripts -->
+    <script src="_content/PSC.Blazor.Components.MarkdownEditor/js/easymde.min.js"></script>
+    <script src="_content/PSC.Blazor.Components.MarkdownEditor/js/markdownEditor.js"></script>
+
+    <!-- Custom Script to Initialize Flowbite -->
     <script>
-        Blazor.addEventListener("enhanchedload", () => {
+        Blazor.addEventListener("enhancedload", () => {
             initFlowbite();
-        })
+        });
     </script>
 </body>
 

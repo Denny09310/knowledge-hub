@@ -1,0 +1,5 @@
+﻿::deep .editor-toolbar {
+    overflow-x: auto;
+    display: inline-flex;
+    width: 100%;
+}
