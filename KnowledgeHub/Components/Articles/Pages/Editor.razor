@@ -1,26 +1,26 @@
 ﻿@page "/Articles/Editor"
+@using Microsoft.AspNetCore.Authorization
 @using System.Security.Claims
-@rendermode InteractiveServer
-@attribute [Authorize]
 
+@inject IAuthorizationService AuthorizationService
 @inject ArticlesManager ArticlesManager
-@inject ArticleAccessor ArticleAccessor
 
-@if (isLoading)
+@if (!hasPermissionToEdit)
+{
+    <p>You are not authorized to edit this article.</p>
+}
+else if (isLoading)
 {
     <PageLoader />
 }
 else if (article == null)
 {
-    <DangerAlert Title="Error!" Message="This article does not exists or has been deleted." />
-}
-else if (!isAuthor)
-{
-    <p>You are not the author of this article. You can't modify it</p>
+    <DangerAlert Title="Error!" Message="This article does not exist or has been deleted." />
 }
 else
 {
-
+    <h3>Edit Article</h3>
+    <!-- Add article editing form here -->
 }
 
 @code
@@ -32,8 +32,8 @@ else
     public Task<AuthenticationState> GetAuthenticationState { get; set; } = default!;
 
     private Article? article;
-    private bool isAuthor;
     private bool isLoading;
+    private bool hasPermissionToEdit; 
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,6 +41,7 @@ else
         {
             isLoading = true;
             await LoadArticleAsync();
+            await CheckAuthorizationAsync();
         }
         finally
         {
@@ -52,11 +53,26 @@ else
     {
         if (string.IsNullOrEmpty(Id))
         {
-            isAuthor = true;
             return;
         }
 
         article = await ArticlesManager.GetArticleAsync(Id);
-        isAuthor = await ArticleAccessor.IsUserAuthor(article);
+    }
+
+    private async Task CheckAuthorizationAsync()
+    {
+        if (article == null)
+        {
+            hasPermissionToEdit = false;
+            return;
+        }
+
+        var authenticationState = await GetAuthenticationState;
+        var authorizationResult = await AuthorizationService.AuthorizeAsync(
+            authenticationState.User,
+            article,
+            "Authors_Only");
+
+        hasPermissionToEdit = authorizationResult.Succeeded;
     }
 }

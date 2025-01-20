@@ -13,6 +13,10 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Authors_Only", policy =>
+        policy.Requirements.Add(new AuthorRequirement()));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = IdentityConstants.ApplicationScheme;
@@ -33,7 +37,6 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 
 builder.Services.AddScoped<ArticlesManager>();
 builder.Services.AddScoped<ArticleRenderer>();
-builder.Services.AddScoped<ArticleAccessor>();
 
 var app = builder.Build();
 
