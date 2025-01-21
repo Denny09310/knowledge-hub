@@ -3,7 +3,7 @@ using System.Net;
 
 namespace KnowledgeHub.Components.Articles;
 
-internal static class IdentityEndpointRouteBuilderExtensions
+internal static class ArticlesEndpointRouteBuilderExtensions
 {
     internal static IEndpointConventionBuilder MapArticlesEndpoints(this IEndpointRouteBuilder builder)
     {
@@ -30,7 +30,14 @@ internal static class IdentityEndpointRouteBuilderExtensions
                 Data = new { FilePath = $"images/{fileName}" }
             });
         })
+        .RequireAuthorization()
         .DisableAntiforgery();
+
+        articlesGroup.MapPost("/", (string id, CancellationToken ct, [FromServices] ArticlesManager articlesManager) =>
+        {
+            return Results.Ok();
+        })
+        .RequireAuthorization();
 
         return articlesGroup;
     }

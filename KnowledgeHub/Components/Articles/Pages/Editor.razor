@@ -15,10 +15,6 @@ else if (isLoading)
 {
     <PageLoader />
 }
-else if (article == null)
-{
-    <DangerAlert Title="Error!" Message="This article does not exist or has been deleted." />
-}
 else
 {
     <EditForm method="post" Model="Input" FormName="create-article" OnValidSubmit="OnValidSubmitAsync" Enhance>
@@ -27,7 +23,7 @@ else
             <InputText @bind-Value="Input.Title" id="Input.Title" class="bg-gray-50 border-gray-300 text-gray-900 p-2.5 block w-full rounded-lg border text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="username" aria-required="true" placeholder="Write your title..." />
             <ValidationMessage For="() => Input.Title" class="text-red-400" />
         </div>
-        <InputTextArea @bind-Value="Input.Content" id="markdown-editor"></InputTextArea>
+        <InputTextArea @bind-Value="Input.Content" id="markdown-editor" />
         <button type="submit" class="text-white bg-blue-700 px-5 py-2.5 me-2 mb-2 rounded-lg text-sm font-medium hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             Publish
         </button>
@@ -48,7 +44,7 @@ else
     private HttpContext HttpContext { get; set; } = default!;
 
     private Article? article;
-    private bool isLoading, hasPermissionToEdit;
+    private bool isLoading, hasPermissionToEdit = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,39 +54,30 @@ else
 
             if (string.IsNullOrEmpty(Id))
             {
-                InitializeEditor();
                 return;
             }
 
             article = await ArticlesManager.GetArticleAsync(Id);
-            await CheckAuthorizationAsync();
+
+            if (article == null)
+            {
+                return;
+            }
+
+            var authorizationResult = await AuthorizationService.AuthorizeAsync(
+                HttpContext.User,
+                article,
+                "Authors_Only");
+
+            hasPermissionToEdit = authorizationResult.Succeeded;
+
+            Input.Title = article.Title;
+            Input.Content = article.Content;
         }
         finally
         {
             isLoading = false;
         }
-    }
-
-    private void InitializeEditor()
-    {
-        article = new();
-        hasPermissionToEdit = true;
-    }
-
-    private async Task CheckAuthorizationAsync()
-    {
-        if (article == null)
-        {
-            hasPermissionToEdit = false;
-            return;
-        }
-
-        var authorizationResult = await AuthorizationService.AuthorizeAsync(
-            HttpContext.User,
-            article,
-            "Authors_Only");
-
-        hasPermissionToEdit = authorizationResult.Succeeded;
     }
 
     private async Task OnValidSubmitAsync()
@@ -104,7 +91,14 @@ else
         article.UserId = user.Id;
         article.Author = (user.UserName ?? user.Email)!;
 
-        await ArticlesManager.CreateArticleAsync(article);
+        if (!string.IsNullOrEmpty(Id))
+        {
+            await ArticlesManager.UpdateArticleAsync(article);
+        }
+        else
+        {
+            await ArticlesManager.CreateArticleAsync(article);
+        }
 
         NavigationManager.NavigateTo($"/Articles/{article.Id}");
     }

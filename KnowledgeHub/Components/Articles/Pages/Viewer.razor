@@ -14,14 +14,31 @@ else if (!string.IsNullOrEmpty(errorMessage))
 }
 else if (article != null)
 {
-        <h2 id="article-title" class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@article.Title</h2>
-        <div class="gap-4 mb-8 flex flex-row items-center">
-            <UserGravatar Name="@article.Author" />
-            <div>
-                <p aria-labelledby="article-title" class="text-gray-700 text-sm font-medium">@article.Author</p>
-                <p class="text-gray-500 text-xs">@article.CreatedAt.ToShortDateString()</p>
-            </div>
+    <h1 id="article-title" class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">
+        @article.Title
+    </h1>
+    <div class="gap-4 mb-8 flex flex-row items-center">
+        <UserGravatar Name="@article.Author" />
+        <div>
+            <p aria-labelledby="article-title" class="text-gray-700 text-sm font-medium dark:text-gray-400">@article.Author</p>
+            <p class="text-gray-500 text-xs dark:text-gray-500">@article.CreatedAt.ToShortDateString()</p>
         </div>
+    </div>
+
+    @if (isAuthor)
+    {
+        <div class="mt-6 gap-4 flex">
+            <a href="Articles/Editor?Id=@article.Id" class="text-white bg-blue-600 px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-700">
+                Edit
+            </a>
+            <form method="post" action="Articles/@article.Id">
+                <AntiforgeryToken />
+                <button type="submit" class="text-white bg-red-600 px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-700">
+                    Delete
+                </button>
+            </form>
+        </div>
+    }
 
     <div id="markdown-body" class="prose scroll-smooth dark:prose-invert">
         @((MarkupString)(article.Content ?? ""))
@@ -36,7 +53,7 @@ else if (article != null)
     public string Id { get; set; } = default!;
 
     [CascadingParameter]
-    public Task<AuthenticationState> GetAuthenticationState { get; set; } = default!;
+    public HttpContext HttpContext { get; set; } = default!;
 
     private Article? article;
     private string? errorMessage;
@@ -65,13 +82,12 @@ else if (article != null)
     {
         if (article == null)
         {
-            errorMessage = "This article does not exists or has been deleted.";
+            errorMessage = "This article does not exist or has been deleted.";
             return;
         }
 
-        var authenticationState = await GetAuthenticationState;
         var authorizationResult = await AuthorizationService.AuthorizeAsync(
-            authenticationState.User,
+            HttpContext.User,
             article,
             "Authors_Only");
 
@@ -79,7 +95,7 @@ else if (article != null)
 
         if (!isAuthor && article.Visibility != ArticleVisibility.Public)
         {
-            errorMessage = "You have not access to this article.";
+            errorMessage = "You do not have access to this article.";
         }
     }
 }

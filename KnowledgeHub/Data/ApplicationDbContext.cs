@@ -67,7 +67,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Ignore(e => e.Content);
 
             entity.Property(e => e.CreatedAt)
-                  .IsRequired();
+                  .IsRequired()
+                  .HasDefaultValueSql("CURRENT_DATE");
 
             entity.Property(a => a.TotalReactions)
                   .HasDefaultValue(0);

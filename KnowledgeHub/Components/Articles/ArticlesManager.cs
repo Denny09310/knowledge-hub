@@ -4,8 +4,40 @@ namespace KnowledgeHub.Components.Articles;
 
 public class ArticlesManager(ApplicationDbContext db, IConfiguration configuration)
 {
-    private readonly ApplicationDbContext _db = db;
     private readonly IConfiguration _configuration = configuration;
+    private readonly ApplicationDbContext _db = db;
+
+    public async Task<Article> CreateArticleAsync(Article article)
+    {
+        await _db.Articles.AddAsync(article);
+        await _db.SaveChangesAsync();
+
+        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
+        Directory.CreateDirectory(articlesFolder);
+
+        var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
+        await File.WriteAllTextAsync(articleFilePath, article.Content);
+
+        return article;
+    }
+
+    public async Task<Article?> GetArticleAsync(string articleId)
+    {
+        var article = await _db.Articles.FindAsync(articleId);
+
+        if (article == null)
+        {
+            return null;
+        }
+
+        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
+        Directory.CreateDirectory(articlesFolder);
+
+        var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
+        article.Content = await File.ReadAllTextAsync(articleFilePath);
+
+        return article;
+    }
 
     public async Task<PagedResult<Article>> GetArticlesAsync(int offset = 0, int limit = 25)
     {
@@ -19,19 +51,12 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
         return new(articles, count);
     }
 
-    public async Task<Article?> GetArticleAsync(string articleId)
+    public async Task<Article?> UpdateArticleAsync(Article article)
     {
-        return await _db.Articles.FindAsync(articleId);
-    }
-
-    public async Task<Article> CreateArticleAsync(Article article)
-    {
-        await _db.Articles.AddAsync(article);
+       _db.Articles.Update(article);
         await _db.SaveChangesAsync();
 
-        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set."); ;
-        Directory.CreateDirectory(articlesFolder);
-
+        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
         var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
         await File.WriteAllTextAsync(articleFilePath, article.Content);
 

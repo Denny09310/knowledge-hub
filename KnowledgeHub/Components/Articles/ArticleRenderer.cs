@@ -30,8 +30,13 @@ public class ArticleRenderer(IConfiguration configuration, ApplicationDbContext 
         if (string.IsNullOrEmpty(articleFilePath))
             return null;
 
-        article.Content = Markdown.ToHtml(await File.ReadAllTextAsync(articleFilePath), _pipeline);
+        article.Content = RenderArticle(await File.ReadAllTextAsync(articleFilePath));
 
         return article;
+    }
+
+    public static string RenderArticle(string? content)
+    {
+        return Markdown.ToHtml(content ?? "", _pipeline);
     }
 }
