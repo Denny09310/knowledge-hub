@@ -1,4 +1,5 @@
 ﻿using Markdig;
+using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeHub.Components.Articles;
 
@@ -14,7 +15,8 @@ public class ArticleRenderer(IConfiguration configuration, ApplicationDbContext 
 
     public async Task<Article?> LoadArticleAsync(string id)
     {
-        var article = await _db.Articles.FindAsync([id]);
+        var article = await _db.Articles.Include(x => x.Reactions)
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (article == null)
         {

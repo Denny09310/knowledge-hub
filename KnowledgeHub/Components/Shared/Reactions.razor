@@ -1,0 +1,53 @@
+﻿@inject ArticlesManager ArticlesManager
+@inject IdentityUserAccessor UserAccessor
+
+<form method="post" class="space-x-4 p-2 bg-gray-50 inline-flex rounded-full" data-enhance @onsubmit="OnSubmitAsync" @formname="select-reaction">
+    <AntiforgeryToken />
+    <button type="submit" name="Reaction" value="@ReactionType.Like" class="p-2 bg-transparent flex items-center justify-center rounded-full hover:bg-gray-800/25 data-active:bg-gray-800/25" data-active="@(Reaction is ReactionType.Like)">
+        👍
+    </button>
+    <button type="submit" name="Reaction" value="@ReactionType.Dislike" class="p-2 bg-transparent flex items-center justify-center rounded-full hover:bg-gray-800/25 data-active:bg-gray-800/25" data-active="@(Reaction is ReactionType.Dislike)">
+        👎
+    </button>
+    <button type="submit" name="Reaction" value="@ReactionType.Clapping" class="p-2 bg-transparent flex items-center justify-center rounded-full hover:bg-gray-800/25 data-active:bg-gray-800/25" data-active="@(Reaction is ReactionType.Clapping)">
+        👏
+    </button>
+    <button type="submit" name="Reaction" value="@ReactionType.Fire" class="p-2 bg-transparent flex items-center justify-center rounded-full hover:bg-gray-800/25 data-active:bg-gray-800/25" data-active="@(Reaction is ReactionType.Fire)">
+        🔥
+    </button>
+    <button type="submit" name="Reaction" value="@ReactionType.Love" class="p-2 bg-transparent flex items-center justify-center rounded-full hover:bg-gray-800/25 data-active:bg-gray-800/25" data-active="@(Reaction is ReactionType.Love)">
+        ❤️
+    </button>
+</form>
+
+@code
+{
+    [SupplyParameterFromForm]
+    private ReactionType? Reaction { get; set; }
+
+    [CascadingParameter]
+    public HttpContext HttpContext { get; set; } = default!;
+
+    [Parameter]
+    [EditorRequired]
+    public Article Article { get; set; } = default!;
+
+    private ApplicationUser? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        Reaction ??= Article.Reactions.FirstOrDefault(r => r.UserId == user.Id)?.Type;
+    }
+
+    private async Task OnSubmitAsync()
+    {
+        if (Reaction is null || user == null)
+        {
+            return;
+        }
+
+        await ArticlesManager.SetReactionAsync(Article, user.Id, Reaction.Value);
+        Reaction = Article.Reactions.FirstOrDefault(r => r.UserId == user.Id)?.Type;
+    }
+}

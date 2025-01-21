@@ -11,8 +11,9 @@ public class Reaction
     #region Navigation Properties
 
     public Article Article { get; set; } = default!;
+    public ApplicationUser User { get; set; } = default!;
 
-    #endregion
+    #endregion Navigation Properties
 }
 
 public enum ReactionType
@@ -20,5 +21,6 @@ public enum ReactionType
     Like,
     Dislike,
     Clapping,
-    Fire
+    Fire,
+    Love
 }

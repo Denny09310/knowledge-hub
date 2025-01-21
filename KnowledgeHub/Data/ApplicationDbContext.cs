@@ -28,29 +28,38 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.Entity<IdentityUserRole<string>>().ToTable("asp_net_user_roles");
         builder.Entity<IdentityRoleClaim<string>>().ToTable("asp_net_role_claims");
 
-        #endregion
+        #endregion Name Overrides
 
         builder.Entity<Reaction>(entity =>
         {
             entity.HasKey(r => r.Id);
 
             entity.Property(r => r.Id)
-                  .IsRequired()
-                  .HasMaxLength(36);
+                  .ValueGeneratedOnAdd();
 
             entity.Property(r => r.ArticleId)
                   .IsRequired()
                   .HasMaxLength(36);
 
+            entity.Property(r => r.UserId)
+                  .IsRequired();
+
             entity.Property(r => r.Type)
                   .IsRequired()
                   .HasConversion<string>();
 
-            entity.Property(r => r.UserId)
-                  .HasMaxLength(36);
-
             entity.Property(r => r.Timestamp)
                   .IsRequired();
+
+            entity.HasOne(r => r.Article)
+                    .WithMany(a => a.Reactions)
+                    .HasForeignKey(r => r.ArticleId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(r => r.User)
+                    .WithMany(u => u.Reactions)
+                    .HasForeignKey(r => r.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
         });
 
         builder.Entity<Article>(entity =>
@@ -72,7 +81,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.Property(a => a.TotalReactions)
                   .HasDefaultValue(0);
-            
+
             entity.Property(a => a.Visibility)
                   .HasConversion<string>();
 

@@ -40,9 +40,11 @@ else if (article != null)
         </div>
     }
 
-    <div id="markdown-body" class="prose scroll-smooth dark:prose-invert">
+    <div id="markdown-body" class="prose mb-6 scroll-smooth dark:prose-invert">
         @((MarkupString)(article.Content ?? ""))
     </div>
+
+    <Reactions Article="@article" />
 
     <PageScript Src="./Components/Articles/Pages/Viewer.razor.js" />
 }

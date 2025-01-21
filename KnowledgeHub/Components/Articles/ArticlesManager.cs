@@ -21,6 +21,43 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
         return article;
     }
 
+    public async Task SetReactionAsync(Article article, string userId, ReactionType type)
+    {
+        var reaction = await _db.Reactions.FirstOrDefaultAsync(x => x.ArticleId == article.Id && x.UserId == userId);
+
+        if (reaction == null)
+        {
+            // Add a new reaction
+            reaction = new()
+            {
+                ArticleId = article.Id,
+                UserId = userId,
+                Type = type,
+                Timestamp = DateTime.UtcNow
+            };
+            await _db.Reactions.AddAsync(reaction);
+
+            article.TotalReactions++;
+            _db.Articles.Update(article);
+        }
+        else if (reaction.Type == type)
+        {
+            // Remove existing reaction
+            _db.Reactions.Remove(reaction);
+            article.TotalReactions = Math.Max(0, article.TotalReactions - 1);
+        }
+        else
+        {
+            // Update reaction type
+            reaction.Type = type;
+            reaction.Timestamp = DateTime.UtcNow;
+            _db.Reactions.Update(reaction);
+        }
+
+        await _db.SaveChangesAsync();
+    }
+
+
     public async Task DeleteArticleAsync(string articleId)
     {
         var article = await _db.Articles.FindAsync(articleId);
@@ -69,7 +106,7 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
 
     public async Task<Article?> UpdateArticleAsync(Article article)
     {
-       _db.Articles.Update(article);
+        _db.Articles.Update(article);
         await _db.SaveChangesAsync();
 
         var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
