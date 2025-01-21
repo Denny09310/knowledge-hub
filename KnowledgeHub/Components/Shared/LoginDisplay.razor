@@ -1,0 +1,26 @@
+﻿@using System.Text
+@using System.Security.Cryptography
+
+<AuthorizeView>
+    <Authorized>
+        <a href="Account/Manage">
+            <img class="w-10 h-10 rounded-full" src="@GetGravatarUrl(context.User.Identity?.Name)" alt="Rounded avatar">
+        </a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="Account/Login"
+           type="button"
+           class="text-white bg-blue-700 px-4 py-2 rounded-lg text-center text-sm font-medium hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Get started
+        </a>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code
+{
+    private string GetGravatarUrl(string? name, int width = 128)
+    {
+        var hash = MD5.HashData(Encoding.UTF8.GetBytes(name ?? "default"));
+        return $"https://www.gravatar.com/avatar/{hash}?s={width}&d=identicon&r=PG";
+    }
+}
