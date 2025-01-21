@@ -1,6 +1,7 @@
 ﻿@page "/Articles/Editor"
 @using Microsoft.AspNetCore.Identity
 @using System.ComponentModel.DataAnnotations
+@attribute [Authorize]
 
 @inject IAuthorizationService AuthorizationService
 @inject ArticlesManager ArticlesManager
@@ -35,7 +36,7 @@ else
 @code
 {
     [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    private InputModel Input { get; set; } = default!;
 
     [SupplyParameterFromQuery]
     public string? Id { get; set; }
@@ -71,8 +72,11 @@ else
 
             hasPermissionToEdit = authorizationResult.Succeeded;
 
-            Input.Title = article.Title;
-            Input.Content = article.Content;
+            Input ??= new()
+            {
+                Title = article.Title,
+                Content = article.Content
+            };
         }
         finally
         {
