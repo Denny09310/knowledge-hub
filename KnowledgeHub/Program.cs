@@ -1,12 +1,20 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.Configure<HubOptions>(options =>
+{
+    options.MaximumReceiveMessageSize = 2 * 1024 * 1024; 
+});
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -56,10 +64,19 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/images",
+    ContentTypeProvider = new FileExtensionContentTypeProvider(),
+    FileProvider = new PhysicalFileProvider(
+        Environment.ExpandEnvironmentVariables(builder.Configuration.GetValue<string>("Uploads:Images")!)),
+});
+
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
 app.MapAdditionalIdentityEndpoints();
+app.MapArticlesEndpoints();
 
 app.Run();

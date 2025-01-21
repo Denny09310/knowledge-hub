@@ -21,9 +21,10 @@ public class ArticleRenderer(IConfiguration configuration, ApplicationDbContext 
             return null;
         }
 
-        var uploadsPath = _configuration["Uploads:Path"] ?? throw new InvalidOperationException("Upload path not set.");
-        var articlesPath = Environment.ExpandEnvironmentVariables(uploadsPath);
-        var articleFilePath = Directory.EnumerateFiles(articlesPath)
+        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set."); ;
+        Directory.CreateDirectory(articlesFolder);
+
+        var articleFilePath = Directory.EnumerateFiles(articlesFolder)
             .FirstOrDefault(file => Path.GetFileNameWithoutExtension(file) == id);
 
         if (string.IsNullOrEmpty(articleFilePath))

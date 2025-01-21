@@ -1,10 +1,11 @@
 ﻿@page "/Articles/Editor"
-@rendermode InteractiveServer
-@using PSC.Blazor.Components.MarkdownEditor
-@using PSC.Blazor.Components.MarkdownEditor.EventsArgs
+@using Microsoft.AspNetCore.Identity
+@using System.ComponentModel.DataAnnotations
 
 @inject IAuthorizationService AuthorizationService
 @inject ArticlesManager ArticlesManager
+@inject IdentityUserAccessor UserAccessor
+@inject NavigationManager NavigationManager
 
 @if (!hasPermissionToEdit)
 {
@@ -20,18 +21,31 @@ else if (article == null)
 }
 else
 {
-    <div class="markdown-container">
-        <MarkdownEditor />
-    </div>
+    <EditForm method="post" Model="Input" FormName="create-article" OnValidSubmit="OnValidSubmitAsync" Enhance>
+        <div class="mb-3">
+            <label for="Input.Email" class="mb-2 text-gray-900 block text-sm font-medium dark:text-white">Title</label>
+            <InputText @bind-Value="Input.Title" id="Input.Title" class="bg-gray-50 border-gray-300 text-gray-900 p-2.5 block w-full rounded-lg border text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" autocomplete="username" aria-required="true" placeholder="Write your title..." />
+            <ValidationMessage For="() => Input.Title" class="text-red-400" />
+        </div>
+        <InputTextArea @bind-Value="Input.Content" id="markdown-editor"></InputTextArea>
+        <button type="submit" class="text-white bg-blue-700 px-5 py-2.5 me-2 mb-2 rounded-lg text-sm font-medium hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+            Publish
+        </button>
+    </EditForm>
+
+    <PageScript Src="./Components/Articles/Pages/Editor.razor.js" />
 }
 
 @code
 {
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
     [SupplyParameterFromQuery]
     public string? Id { get; set; }
 
     [CascadingParameter]
-    public Task<AuthenticationState> GetAuthenticationState { get; set; } = default!;
+    private HttpContext HttpContext { get; set; } = default!;
 
     private Article? article;
     private bool isLoading, hasPermissionToEdit;
@@ -71,12 +85,35 @@ else
             return;
         }
 
-        var authenticationState = await GetAuthenticationState;
         var authorizationResult = await AuthorizationService.AuthorizeAsync(
-            authenticationState.User,
+            HttpContext.User,
             article,
             "Authors_Only");
 
         hasPermissionToEdit = authorizationResult.Succeeded;
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        article ??= new();
+
+        article.Title = Input.Title;
+        article.Content = Input.Content;
+
+        var user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        article.UserId = user.Id;
+        article.Author = (user.UserName ?? user.Email)!;
+
+        await ArticlesManager.CreateArticleAsync(article);
+
+        NavigationManager.NavigateTo($"/Articles/{article.Id}");
+    }
+
+    private sealed class InputModel
+    {
+        [Required]
+        public string Title { get; set; } = default!;
+
+        public string? Content { get; set; }
     }
 }
