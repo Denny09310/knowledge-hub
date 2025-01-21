@@ -12,15 +12,16 @@ else if (!string.IsNullOrEmpty(errorMessage))
 {
     <DangerAlert Title="Error!" Message="@errorMessage" />
 }
-else
+else if (article != null)
 {
-    <div class="gap-4 mb-8 flex flex-col justify-between md:items-center md:flex-row">
-        <div>
-            <h2 id="article-title" class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@article.Title</h2>
-            <p aria-labelledby="article-title" class="text-gray-700 text-sm font-medium">@article.Author</p>
-            <p class="text-gray-500 text-xs">@article.CreatedAt.ToShortDateString()</p>
+        <h2 id="article-title" class="mb-4 text-gray-900 text-3xl font-extrabold leading-none tracking-tight dark:text-white md:text-4xl">@article.Title</h2>
+        <div class="gap-4 mb-8 flex flex-row items-center">
+            <UserGravatar Name="@article.Author" />
+            <div>
+                <p aria-labelledby="article-title" class="text-gray-700 text-sm font-medium">@article.Author</p>
+                <p class="text-gray-500 text-xs">@article.CreatedAt.ToShortDateString()</p>
+            </div>
         </div>
-    </div>
 
     <div id="markdown-body" class="prose scroll-smooth dark:prose-invert">
         @((MarkupString)(article.Content ?? ""))

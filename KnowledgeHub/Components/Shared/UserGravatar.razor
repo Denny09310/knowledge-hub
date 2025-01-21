@@ -1,0 +1,24 @@
+﻿@using System.Text
+@using System.Security.Cryptography
+
+<img class="aspect-square rounded-full" src="@src" alt="@Name Gravatar" style="@Style">
+
+@code
+{
+    [Parameter]
+    [EditorRequired]
+    public string Name { get; set; } = "User";
+
+    [Parameter]
+    public int Width { get; set; } = 32;
+
+    private string? src;
+
+    private string Style => $"width: {Width}px";
+
+    protected override void OnInitialized()
+    {
+        var hash = MD5.HashData(Encoding.UTF8.GetBytes(Name));
+        src = $"https://www.gravatar.com/avatar/{hash}?s={Width}&d=identicon&r=PG";
+    }
+}
