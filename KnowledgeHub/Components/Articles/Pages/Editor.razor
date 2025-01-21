@@ -34,8 +34,7 @@ else
     public Task<AuthenticationState> GetAuthenticationState { get; set; } = default!;
 
     private Article? article;
-    private bool isLoading;
-    private bool hasPermissionToEdit; 
+    private bool isLoading, hasPermissionToEdit;
 
     protected override async Task OnInitializedAsync()
     {

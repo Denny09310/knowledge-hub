@@ -71,6 +71,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
             entity.Property(a => a.TotalReactions)
                   .HasDefaultValue(0);
+            
+            entity.Property(a => a.Visibility)
+                  .HasConversion<string>();
 
             entity.HasMany(a => a.Reactions)
                   .WithOne(r => r.Article)

@@ -10,6 +10,7 @@ public class ArticlesManager(ApplicationDbContext db)
     {
         var articles = await _db.Articles.OrderBy(x => x.Title)
             .Take(limit).Skip(offset)
+            .Where(x => x.Visibility == ArticleVisibility.Public)
             .ToListAsync();
 
         var count = await _db.Articles.CountAsync();

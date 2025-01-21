@@ -3,6 +3,8 @@ using System.Security.Claims;
 
 namespace KnowledgeHub.Components.Articles;
 
+public class AuthorRequirement : IAuthorizationRequirement;
+
 public class AuthorAuthorizationHandler : AuthorizationHandler<AuthorRequirement, Article>
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorRequirement requirement, Article resource)
@@ -20,7 +22,7 @@ public class AuthorAuthorizationHandler : AuthorizationHandler<AuthorRequirement
             context.Fail();
             return Task.CompletedTask;
         }
-         
+
         context.Succeed(requirement);
         return Task.CompletedTask;
     }
