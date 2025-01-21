@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace KnowledgeHub.Components.Articles;
 
@@ -33,9 +32,10 @@ internal static class ArticlesEndpointRouteBuilderExtensions
         .RequireAuthorization()
         .DisableAntiforgery();
 
-        articlesGroup.MapPost("/", (string id, CancellationToken ct, [FromServices] ArticlesManager articlesManager) =>
+        articlesGroup.MapPost("/{id}/Delete", async (string id, CancellationToken ct, [FromServices] ArticlesManager articlesManager) =>
         {
-            return Results.Ok();
+            await articlesManager.DeleteArticleAsync(id);
+            return Results.LocalRedirect("~/");
         })
         .RequireAuthorization();
 

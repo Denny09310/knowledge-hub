@@ -21,6 +21,22 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
         return article;
     }
 
+    public async Task DeleteArticleAsync(string articleId)
+    {
+        var article = await _db.Articles.FindAsync(articleId);
+        if (article == null)
+        {
+            return;
+        }
+        _db.Articles.Remove(article);
+        await _db.SaveChangesAsync();
+
+        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
+        var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
+
+        File.Delete(articleFilePath);
+    }
+
     public async Task<Article?> GetArticleAsync(string articleId)
     {
         var article = await _db.Articles.FindAsync(articleId);
