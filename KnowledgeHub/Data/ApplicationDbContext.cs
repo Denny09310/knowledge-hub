@@ -67,10 +67,14 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.Ignore(e => e.Content);
 
             entity.Property(e => e.CreatedAt)
-                  .IsRequired();
+                  .IsRequired()
+                  .HasDefaultValueSql("CURRENT_DATE");
 
             entity.Property(a => a.TotalReactions)
                   .HasDefaultValue(0);
+            
+            entity.Property(a => a.Visibility)
+                  .HasConversion<string>();
 
             entity.HasMany(a => a.Reactions)
                   .WithOne(r => r.Article)

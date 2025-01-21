@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +38,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+builder.Services.AddSingleton<IAuthorizationHandler, AuthorAuthorizationHandler>();
 builder.Services.AddScoped<ArticlesManager>();
 builder.Services.AddScoped<ArticleRenderer>();
 
@@ -56,10 +60,19 @@ app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    RequestPath = "/images",
+    ContentTypeProvider = new FileExtensionContentTypeProvider(),
+    FileProvider = new PhysicalFileProvider(
+        Environment.ExpandEnvironmentVariables(builder.Configuration.GetValue<string>("Uploads:Images")!)),
+});
+
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
    .AddInteractiveServerRenderMode();
 
 app.MapAdditionalIdentityEndpoints();
+app.MapArticlesEndpoints();
 
 app.Run();

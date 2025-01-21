@@ -1,5 +1,27 @@
 ﻿@inherits LayoutComponentBase
 
-<main class="p-4 container mx-auto min-h-screen md:p-0">
+<nav class="bg-white top-0 start-0 border-gray-200 fixed z-20 w-full border-b dark:bg-gray-900 dark:border-gray-600">
+    <div class="p-4 mx-auto flex max-w-screen-xl flex-wrap items-center justify-between">
+        <a href="https://flowbite.com/" class="space-x-3 flex items-center rtl:space-x-reverse">
+            <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo">
+            <span class="hidden self-center whitespace-nowrap text-2xl font-semibold dark:text-white md:block">Flowbite</span>
+        </a>
+        <div class="space-x-3 flex rtl:space-x-reverse md:order-2 md:space-x-0">
+            <LoginDisplay />
+            <button data-collapse-toggle="navbar-sticky" type="button" class="p-2 w-10 h-10 text-gray-500 inline-flex items-center justify-center rounded-lg text-sm hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 md:hidden dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-sticky" aria-expanded="false">
+                <span class="sr-only">Open main menu</span>
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
+            </button>
+        </div>
+        <div class="hidden w-full items-center justify-between md:flex md:w-auto md:order-1" id="navbar-sticky">
+            <NavMenu />
+        </div>
+    </div>
+</nav>
+
+
+<main class="px-4 pt-24 pb-6 container mx-auto min-h-screen md:pb-0 md:px-0">
     @Body
 </main>

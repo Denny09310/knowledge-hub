@@ -21,16 +21,22 @@ public class ArticleRenderer(IConfiguration configuration, ApplicationDbContext 
             return null;
         }
 
-        var uploadsPath = _configuration["Uploads:Path"] ?? throw new InvalidOperationException("Upload path not set.");
-        var articlesPath = Environment.ExpandEnvironmentVariables(uploadsPath);
-        var articleFilePath = Directory.EnumerateFiles(articlesPath)
+        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set."); ;
+        Directory.CreateDirectory(articlesFolder);
+
+        var articleFilePath = Directory.EnumerateFiles(articlesFolder)
             .FirstOrDefault(file => Path.GetFileNameWithoutExtension(file) == id);
 
         if (string.IsNullOrEmpty(articleFilePath))
             return null;
 
-        article.Content = Markdown.ToHtml(await File.ReadAllTextAsync(articleFilePath), _pipeline);
+        article.Content = RenderArticle(await File.ReadAllTextAsync(articleFilePath));
 
         return article;
+    }
+
+    public static string RenderArticle(string? content)
+    {
+        return Markdown.ToHtml(content ?? "", _pipeline);
     }
 }

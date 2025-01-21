@@ -3,6 +3,7 @@ using System;
 using KnowledgeHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace KnowledgeHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250121085806_AddArticleVisibility")]
+    partial class AddArticleVisibility
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,10 +130,8 @@ namespace KnowledgeHub.Data.Migrations
                         .HasColumnName("author");
 
                     b.Property<DateOnly>("CreatedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("date")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("CURRENT_DATE");
+                        .HasColumnName("created_at");
 
                     b.Property<string>("Title")
                         .IsRequired()

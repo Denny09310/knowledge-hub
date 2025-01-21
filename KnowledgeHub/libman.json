@@ -24,13 +24,20 @@
       ]
     },
     {
-      "provider": "jsdelivr",
       "library": "prismjs@1.29.0",
       "destination": "wwwroot/_lib/prismjs/",
       "files": [
         "plugins/autoloader/prism-autoloader.min.js",
         "components/*.min.js",
         "themes/*.min.css"
+      ]
+    },
+    {
+      "library": "easymde@2.18.1-177.0",
+      "destination": "wwwroot/_lib/easymde/",
+      "files": [
+        "dist/easymde.min.css",
+        "dist/easymde.min.js"
       ]
     }
   ]
