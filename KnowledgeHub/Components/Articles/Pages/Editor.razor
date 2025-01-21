@@ -8,9 +8,9 @@
 @inject IdentityUserAccessor UserAccessor
 @inject NavigationManager NavigationManager
 
-@if (!hasPermissionToEdit)
+@if (!string.IsNullOrEmpty(errorMessage))
 {
-    <p>You are not authorized to edit this article.</p>
+    <DangerAlert Title="Error!" Message="@errorMessage" />
 }
 else if (isLoading)
 {
@@ -45,7 +45,8 @@ else
     private HttpContext HttpContext { get; set; } = default!;
 
     private Article? article;
-    private bool isLoading, hasPermissionToEdit = true;
+    private string? errorMessage;
+    private bool isLoading;
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,6 +56,7 @@ else
 
             if (string.IsNullOrEmpty(Id))
             {
+                Input ??= new();
                 return;
             }
 
@@ -62,6 +64,7 @@ else
 
             if (article == null)
             {
+                errorMessage = "Article not found.";
                 return;
             }
 
@@ -70,7 +73,11 @@ else
                 article,
                 "Authors_Only");
 
-            hasPermissionToEdit = authorizationResult.Succeeded;
+            if (!authorizationResult.Succeeded)
+            {
+                errorMessage = "You are not authorized to edit this article.";
+                return;
+            }
 
             Input ??= new()
             {
