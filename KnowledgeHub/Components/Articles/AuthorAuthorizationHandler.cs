@@ -1,29 +1,39 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace KnowledgeHub.Components.Articles;
 
 public class AuthorRequirement : IAuthorizationRequirement;
 
-public class AuthorAuthorizationHandler : AuthorizationHandler<AuthorRequirement, Article>
+internal class AuthorAuthorizationHandler(IServiceScopeFactory factory) : AuthorizationHandler<AuthorRequirement, Article>
 {
-    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorRequirement requirement, Article resource)
-    {
-        var userId = context.User.FindFirstValue(ClaimTypes.NameIdentifier);
+    private readonly IServiceScopeFactory _factory = factory;
 
-        if (string.IsNullOrEmpty(userId))
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AuthorRequirement requirement, Article resource)
+    {
+        using var scope = _factory.CreateScope();
+        using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+        var user = await userManager.GetUserAsync(context.User);
+
+        if (user == null) 
         {
             context.Fail();
-            return Task.CompletedTask;
+            return;
         }
 
-        if (resource?.UserId != userId)
+        if (string.IsNullOrEmpty(user.Id))
         {
             context.Fail();
-            return Task.CompletedTask;
+            return;
+        }
+
+        if (resource?.UserId != user.Id)
+        {
+            context.Fail();
+            return;
         }
 
         context.Succeed(requirement);
-        return Task.CompletedTask;
     }
 }
