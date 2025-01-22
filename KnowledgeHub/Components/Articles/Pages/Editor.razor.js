@@ -3,7 +3,7 @@
 }
 
 function initializeEditor() {
-    const element = document.querySelector('#markdown-editor');
+    const element = document.querySelector('#markdown-editor textarea');
     if (!element) return;
 
     const editor = new EasyMDE({
