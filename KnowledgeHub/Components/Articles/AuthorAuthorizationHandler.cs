@@ -16,7 +16,7 @@ internal class AuthorAuthorizationHandler(IServiceScopeFactory factory) : Author
 
         var user = await userManager.GetUserAsync(context.User);
 
-        if (user == null) 
+        if (user == null)
         {
             context.Fail();
             return;

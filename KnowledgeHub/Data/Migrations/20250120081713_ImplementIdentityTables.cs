@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -9,6 +8,67 @@ namespace KnowledgeHub.Data.Migrations
     /// <inheritdoc />
     public partial class ImplementIdentityTables : Migration
     {
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "fk_articles_users_user_id",
+                table: "articles");
+
+            migrationBuilder.DropTable(
+                name: "asp_net_role_claims");
+
+            migrationBuilder.DropTable(
+                name: "asp_net_user_claims");
+
+            migrationBuilder.DropTable(
+                name: "asp_net_user_logins");
+
+            migrationBuilder.DropTable(
+                name: "asp_net_user_roles");
+
+            migrationBuilder.DropTable(
+                name: "asp_net_user_tokens");
+
+            migrationBuilder.DropTable(
+                name: "asp_net_roles");
+
+            migrationBuilder.DropTable(
+                name: "asp_net_users");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "user_id",
+                table: "articles",
+                type: "text",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "text");
+
+            migrationBuilder.CreateTable(
+                name: "users",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_users", x => x.id);
+                });
+
+            migrationBuilder.AddForeignKey(
+                name: "fk_articles_users_user_id",
+                table: "articles",
+                column: "user_id",
+                principalTable: "users",
+                principalColumn: "id");
+        }
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -221,67 +281,6 @@ namespace KnowledgeHub.Data.Migrations
                 principalTable: "asp_net_users",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "fk_articles_users_user_id",
-                table: "articles");
-
-            migrationBuilder.DropTable(
-                name: "asp_net_role_claims");
-
-            migrationBuilder.DropTable(
-                name: "asp_net_user_claims");
-
-            migrationBuilder.DropTable(
-                name: "asp_net_user_logins");
-
-            migrationBuilder.DropTable(
-                name: "asp_net_user_roles");
-
-            migrationBuilder.DropTable(
-                name: "asp_net_user_tokens");
-
-            migrationBuilder.DropTable(
-                name: "asp_net_roles");
-
-            migrationBuilder.DropTable(
-                name: "asp_net_users");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "user_id",
-                table: "articles",
-                type: "text",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "text");
-
-            migrationBuilder.CreateTable(
-                name: "users",
-                columns: table => new
-                {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_users", x => x.id);
-                });
-
-            migrationBuilder.AddForeignKey(
-                name: "fk_articles_users_user_id",
-                table: "articles",
-                column: "user_id",
-                principalTable: "users",
-                principalColumn: "id");
         }
     }
 }

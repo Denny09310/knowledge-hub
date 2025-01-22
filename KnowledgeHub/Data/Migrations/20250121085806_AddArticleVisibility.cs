@@ -8,6 +8,14 @@ namespace KnowledgeHub.Data.Migrations
     public partial class AddArticleVisibility : Migration
     {
         /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "visibility",
+                table: "articles");
+        }
+
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -16,14 +24,6 @@ namespace KnowledgeHub.Data.Migrations
                 type: "text",
                 nullable: false,
                 defaultValue: "");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropColumn(
-                name: "visibility",
-                table: "articles");
         }
     }
 }

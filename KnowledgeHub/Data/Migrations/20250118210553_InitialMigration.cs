@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,6 +7,19 @@ namespace KnowledgeHub.Data.Migrations
     /// <inheritdoc />
     public partial class InitialMigration : Migration
     {
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "reactions");
+
+            migrationBuilder.DropTable(
+                name: "articles");
+
+            migrationBuilder.DropTable(
+                name: "users");
+        }
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -79,19 +91,6 @@ namespace KnowledgeHub.Data.Migrations
                 name: "ix_reactions_article_id",
                 table: "reactions",
                 column: "article_id");
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "reactions");
-
-            migrationBuilder.DropTable(
-                name: "articles");
-
-            migrationBuilder.DropTable(
-                name: "users");
         }
     }
 }

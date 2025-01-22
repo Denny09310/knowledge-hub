@@ -7,7 +7,7 @@ function initializeFeatures() {
     addHeadingAnchors();
     transformLocalAnchorsToFullURL();
     enableClipboardButtons();
-    Prism.highlightAll(); 
+    Prism.highlightAll();
 }
 
 // Transforms all local anchors into full URL anchors to the current page

@@ -20,7 +20,7 @@ internal static class ArticlesEndpointRouteBuilderExtensions
 
             var imagesFolder = ArticleFilesHelper.GetUploadFolderPath(configuration, "Images");
             var imageFileName = ArticleFilesHelper.GenerateUniqueFileName(image.FileName);
-            
+
             using var imageStream = new FileStream(Path.Combine(imagesFolder, imageFileName), FileMode.Create);
             await image.CopyToAsync(imageStream, ct);
 

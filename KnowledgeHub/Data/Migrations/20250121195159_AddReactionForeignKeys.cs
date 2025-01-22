@@ -8,6 +8,36 @@ namespace KnowledgeHub.Data.Migrations
     public partial class AddReactionForeignKeys : Migration
     {
         /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropForeignKey(
+                name: "fk_reactions_users_user_id",
+                table: "reactions");
+
+            migrationBuilder.DropIndex(
+                name: "ix_reactions_user_id",
+                table: "reactions");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "user_id",
+                table: "reactions",
+                type: "character varying(36)",
+                maxLength: 36,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "text");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "id",
+                table: "reactions",
+                type: "character varying(36)",
+                maxLength: 36,
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "text");
+        }
+
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
@@ -40,36 +70,6 @@ namespace KnowledgeHub.Data.Migrations
                 principalTable: "asp_net_users",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropForeignKey(
-                name: "fk_reactions_users_user_id",
-                table: "reactions");
-
-            migrationBuilder.DropIndex(
-                name: "ix_reactions_user_id",
-                table: "reactions");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "user_id",
-                table: "reactions",
-                type: "character varying(36)",
-                maxLength: 36,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "id",
-                table: "reactions",
-                type: "character varying(36)",
-                maxLength: 36,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "text");
         }
     }
 }
