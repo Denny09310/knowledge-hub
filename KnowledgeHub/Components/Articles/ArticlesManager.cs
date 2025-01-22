@@ -12,10 +12,9 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
         await _db.Articles.AddAsync(article);
         await _db.SaveChangesAsync();
 
-        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
-        Directory.CreateDirectory(articlesFolder);
-
-        var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
+        var articlesFolder = ArticleFilesHelper.GetUploadFolderPath(_configuration, "Articles");
+        var articleFilePath = ArticleFilesHelper.GenerateFilePath(articlesFolder, article.Id);
+        
         await File.WriteAllTextAsync(articleFilePath, article.Content);
 
         return article;
@@ -68,8 +67,8 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
         _db.Articles.Remove(article);
         await _db.SaveChangesAsync();
 
-        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
-        var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
+        var articlesFolder = ArticleFilesHelper.GetUploadFolderPath(_configuration, "Articles");
+        var articleFilePath = ArticleFilesHelper.GenerateFilePath(articlesFolder, article.Id);
 
         File.Delete(articleFilePath);
     }
@@ -83,10 +82,9 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
             return null;
         }
 
-        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
-        Directory.CreateDirectory(articlesFolder);
+        var articlesFolder = ArticleFilesHelper.GetUploadFolderPath(_configuration, "Articles");
+        var articleFilePath = ArticleFilesHelper.GenerateFilePath(articlesFolder, article.Id);
 
-        var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
         article.Content = await File.ReadAllTextAsync(articleFilePath);
 
         return article;
@@ -109,8 +107,9 @@ public class ArticlesManager(ApplicationDbContext db, IConfiguration configurati
         _db.Articles.Update(article);
         await _db.SaveChangesAsync();
 
-        var articlesFolder = _configuration["Uploads:Articles"] ?? throw new InvalidOperationException("Upload path not set.");
-        var articleFilePath = Path.Combine(articlesFolder, $"{article.Id}.md");
+        var articlesFolder = ArticleFilesHelper.GetUploadFolderPath(_configuration, "Articles"); 
+        var articleFilePath = ArticleFilesHelper.GenerateFilePath(articlesFolder, article.Id);
+        
         await File.WriteAllTextAsync(articleFilePath, article.Content);
 
         return article;

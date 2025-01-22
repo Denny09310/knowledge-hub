@@ -18,21 +18,24 @@ internal static class ArticlesEndpointRouteBuilderExtensions
                 return Results.StatusCode(StatusCodes.Status413PayloadTooLarge);
             }
 
-            var uploadsFolder = configuration["Uploads:Images"] ?? throw new InvalidOperationException("Images path not set.");
-            var fileName = $"{Guid.CreateVersion7()}{Path.GetExtension(image.FileName)}";
+            var imagesFolder = ArticleFilesHelper.GetUploadFolderPath(configuration, "Images");
+            var imageFileName = ArticleFilesHelper.GenerateUniqueFileName(image.FileName);
             
-            using var fileStream = new FileStream(Path.Combine(uploadsFolder, fileName), FileMode.Create);
-            await image.CopyToAsync(fileStream, ct);
+            using var imageStream = new FileStream(Path.Combine(imagesFolder, imageFileName), FileMode.Create);
+            await image.CopyToAsync(imageStream, ct);
 
             return Results.Ok(new
             {
-                Data = new { FilePath = $"images/{fileName}" }
+                Data = new { FilePath = $"images/{imageFileName}" }
             });
         })
         .RequireAuthorization()
         .DisableAntiforgery();
 
-        articlesGroup.MapPost("/{id}/Delete", async (string id, CancellationToken ct, [FromServices] ArticlesManager articlesManager) =>
+        articlesGroup.MapPost("/{id}/Delete", async (
+            string id,
+            CancellationToken ct,
+            [FromServices] ArticlesManager articlesManager) =>
         {
             await articlesManager.DeleteArticleAsync(id);
             return Results.LocalRedirect("~/");

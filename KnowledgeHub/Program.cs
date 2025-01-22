@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddIdentityCookies();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -37,8 +37,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
 builder.Services.AddSingleton<IAuthorizationHandler, AuthorAuthorizationHandler>();
+
 builder.Services.AddScoped<ArticlesManager>();
 builder.Services.AddScoped<ArticleRenderer>();
 
