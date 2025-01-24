@@ -4,28 +4,28 @@
   "libraries": [
     {
       "library": "flowbite@3.0.0-beta.1",
-      "destination": "wwwroot/_lib/flowbite/",
+      "destination": "wwwroot/lib/flowbite/",
       "files": [
         "dist/flowbite.min.js"
       ]
     },
     {
       "library": "anchor-js@5.0.0",
-      "destination": "wwwroot/_lib/anchor-js/",
+      "destination": "wwwroot/lib/anchor-js/",
       "files": [
         "anchor.min.js"
       ]
     },
     {
       "library": "clipboard@2.0.11",
-      "destination": "wwwroot/_lib/clipboard/",
+      "destination": "wwwroot/lib/clipboard/",
       "files": [
         "dist/clipboard.min.js"
       ]
     },
     {
       "library": "prismjs@1.29.0",
-      "destination": "wwwroot/_lib/prismjs/",
+      "destination": "wwwroot/lib/prismjs/",
       "files": [
         "plugins/autoloader/prism-autoloader.min.js",
         "components/*.min.js",
@@ -34,7 +34,7 @@
     },
     {
       "library": "easymde@2.18.1-177.0",
-      "destination": "wwwroot/_lib/easymde/",
+      "destination": "wwwroot/lib/easymde/",
       "files": [
         "dist/easymde.min.css",
         "dist/easymde.min.js"
